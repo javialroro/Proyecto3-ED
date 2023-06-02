@@ -1,2 +1,2 @@
-public class Templo {
+public class Templo extends Entidad{
 }

@@ -1,2 +1,2 @@
-public class Barco {
+public class Barco extends Entidad{
 }

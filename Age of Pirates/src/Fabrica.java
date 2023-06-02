@@ -1,2 +1,2 @@
-public class Fabrica {
+public class Fabrica extends Entidad{
 }

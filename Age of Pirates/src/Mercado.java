@@ -1,2 +1,2 @@
-public class Mercado {
+public class Mercado extends Entidad{
 }
