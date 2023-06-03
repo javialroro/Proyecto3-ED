@@ -3,6 +3,10 @@ public class Barco extends Entidad{
         System.out.println("winchis");
 
         System.out.println("Pedro Paramo");
+
         System.out.println("Me cago en Venegas");
+        
+        System.out.println("Juan Rulfo");
+
     }
 }
