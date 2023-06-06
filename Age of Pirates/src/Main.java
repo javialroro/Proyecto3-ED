@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Main {
     Entidad[][] matriz1 = new Entidad[20][20];
@@ -7,7 +9,11 @@ public class Main {
     Entidad[][] matriz3 = new Entidad[20][20];
     Entidad[][] matriz4 = new Entidad[20][20];
 
-    JButton[][] matrizBotones = new JButton[20][20];
+    JButton[][] matrizBotones1 = new JButton[20][20];
+
+    JButton[][] matrizBotones2 = new JButton[20][20];
+    JButton[][] matrizBotones3 = new JButton[20][20];
+    JButton[][] matrizBotones4 = new JButton[20][20];
 
     JFrame frame = new JFrame("Age of Pirates");
 
@@ -18,7 +24,6 @@ public class Main {
     JButton p2 = new JButton("P2");
     JButton p3 = new JButton("P3");
     JButton p4 = new JButton("P4");
-
     JButton siguienteTurno = new JButton("Siguiente Turno");
 
     JTextArea chat = new JTextArea();
@@ -36,8 +41,8 @@ public class Main {
         panelDer.setMinimumSize(minSize);
         panelDer.setPreferredSize(minSize);
 
-        dibujarMatriz(matriz1, panelIzq);
-        dibujarMatriz(matriz2, panelDer);
+        dibujarMatriz(matriz1, panelIzq, matrizBotones1);
+        dibujarMatriz(matriz2, panelDer, matrizBotones2);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -51,7 +56,6 @@ public class Main {
         gbc.gridx = 1;
         gbc.weightx = 0.4; // Ajusta el peso para reducir el tamaño
         frame.add(panelDer, gbc);
-
 
         chat.setEditable(false);
         chat.setWrapStyleWord(true);
@@ -92,11 +96,28 @@ public class Main {
         frame.setVisible(true);
     }
 
-    public void dibujarMatriz(Entidad[][] matriz, JPanel panelMatriz) {
+    public void dibujarMatriz(Entidad[][] matriz, JPanel panelMatriz, JButton[][] matrizBotones) {
         for (int r = 0; r < 20; r++) {
             for (int c = 0; c < 20; c++) {
                 matrizBotones[r][c] = new JButton();
+                int finalR = r;
+                int finalC = c;
+                matrizBotones[r][c].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        //colocarObjeto(new Mercado(), finalR, finalC, matriz, matrizBotones);
+                    }
+                });
                 panelMatriz.add(matrizBotones[r][c]);
+            }
+        }
+    }
+
+    public void colocarObjeto(Entidad objeto, int x, int y,Entidad[][] matriz, JButton[][] matrizBotones) {
+        for (int i = x; i < x + objeto.ancho; i++) {
+            for (int j = y; j < y + objeto.alto; j++) {
+                matriz[i][j] = objeto; // 'O' representa el objeto en el tablero
+                matrizBotones[i][j].setBackground(objeto.color);
             }
         }
     }

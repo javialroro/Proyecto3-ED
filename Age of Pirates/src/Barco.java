@@ -1,12 +1,11 @@
+import java.awt.*;
+
 public class Barco extends Entidad{
-    void winchis(){
-        System.out.println("winchis");
-
-        System.out.println("Pedro Paramo");
-
-        System.out.println("Me cago en Venegas");
-        
-        System.out.println("Juan Rulfo");
+    public Barco(){
+        super();
+        ancho = 1;
+        alto = 1;
+        color = new Color(0, 0, 255);
 
     }
 }
