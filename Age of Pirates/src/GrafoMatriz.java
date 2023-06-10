@@ -13,7 +13,7 @@ public class GrafoMatriz {
         max = size;
     }
 
-    public void agregarVertice(int v)
+    public void agregarVertice(Entidad v)
     {
        if (cantidadVertices < max)
        {
@@ -213,54 +213,54 @@ public class GrafoMatriz {
         System.out.println("min: "+ y + "  valor = "+x);
         return y;// RETORNA LA POSICION DEL MENOR
     }
-    public void caminos(String inicio, String fin) {
-        int indiceInicio = -1;
-        int indiceFin = -1;
+    // public void caminos(String inicio, String fin) {
+    //     int indiceInicio = -1;
+    //     int indiceFin = -1;
 
-        // Encontrar los índices de los vértices de inicio y fin en el arreglo de vertices
-        for (int i = 0; i < cantidadVertices; i++) {
-            if (vertices[i].dato == Integer.parseInt(inicio)) {
-                indiceInicio = i;
-            }
-            if (vertices[i].dato == Integer.parseInt(fin)) {
-                indiceFin = i;
-            }
-        }
+    //     // Encontrar los índices de los vértices de inicio y fin en el arreglo de vertices
+    //     for (int i = 0; i < cantidadVertices; i++) {
+    //         if (vertices[i].dato == Integer.parseInt(inicio)) {
+    //             indiceInicio = i;
+    //         }
+    //         if (vertices[i].dato == Integer.parseInt(fin)) {
+    //             indiceFin = i;
+    //         }
+    //     }
 
-        if (indiceInicio != -1 && indiceFin != -1) {
-            boolean[] visitados = new boolean[cantidadVertices];
-            ArrayList<Integer> caminoActual = new ArrayList<>();
-            caminoActual.add(vertices[indiceInicio].dato);
-            encontrarCaminos(indiceInicio, indiceFin, visitados, caminoActual);
-        } else {
-            System.out.println("No se encontraron los vértices de inicio o fin.");
-        }
-    }
+    //     if (indiceInicio != -1 && indiceFin != -1) {
+    //         boolean[] visitados = new boolean[cantidadVertices];
+    //         ArrayList<Integer> caminoActual = new ArrayList<>();
+    //         caminoActual.add(vertices[indiceInicio].dato);
+    //         encontrarCaminos(indiceInicio, indiceFin, visitados, caminoActual);
+    //     } else {
+    //         System.out.println("No se encontraron los vértices de inicio o fin.");
+    //     }
+    // }
 
-    private void encontrarCaminos(int verticeActual, int verticeFin, boolean[] visitados, ArrayList<Integer> caminoActual) {
-        visitados[verticeActual] = true;
+    // private void encontrarCaminos(int verticeActual, int verticeFin, boolean[] visitados, ArrayList<Integer> caminoActual) {
+    //     visitados[verticeActual] = true;
 
-        if (verticeActual == verticeFin) {
-            // Imprimir el camino
-            for (int i = 0; i < caminoActual.size(); i++) {
-                System.out.print(caminoActual.get(i));
-                if (i != caminoActual.size() - 1) {
-                    System.out.print(" -> ");
-                }
-            }
-            System.out.println();
-        } else {
-            for (int i = 0; i < cantidadVertices; i++) {
-                if (matriz[verticeActual][i] != 0 && !visitados[i]) {
-                    caminoActual.add(vertices[i].dato);
-                    encontrarCaminos(i, verticeFin, visitados, caminoActual);
-                    caminoActual.remove(caminoActual.size() - 1);
-                }
-            }
-        }
+    //     if (verticeActual == verticeFin) {
+    //         // Imprimir el camino
+    //         for (int i = 0; i < caminoActual.size(); i++) {
+    //             System.out.print(caminoActual.get(i));
+    //             if (i != caminoActual.size() - 1) {
+    //                 System.out.print(" -> ");
+    //             }
+    //         }
+    //         System.out.println();
+    //     } else {
+    //         for (int i = 0; i < cantidadVertices; i++) {
+    //             if (matriz[verticeActual][i] != 0 && !visitados[i]) {
+    //                 caminoActual.add(vertices[i].dato);
+    //                 encontrarCaminos(i, verticeFin, visitados, caminoActual);
+    //                 caminoActual.remove(caminoActual.size() - 1);
+    //             }
+    //         }
+    //     }
 
-        visitados[verticeActual] = false;
-    }
+    //     visitados[verticeActual] = false;
+    // }
 
 
 

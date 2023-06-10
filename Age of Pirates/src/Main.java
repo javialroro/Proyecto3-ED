@@ -35,7 +35,7 @@ public class Main {
 
     Entidad componenteSeleccionado = null;
 
-    int cantidadComponenteSeleccionado = 0;
+    int cantidadComponenteSeleccionado = 5;
 
     int cantidadFuentes = 1;
     int cantidadMercados = 1;
@@ -201,14 +201,120 @@ public class Main {
         }
     }
 
-    public void colocarObjeto(Entidad objeto, int x, int y,Entidad[][] matriz, JButton[][] matrizBotones) {
+    // public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
+    //     int matrizAncho = matriz.length;
+    //     int matrizAlto = matriz[0].length;
+
+    //     // Verificar si el objeto se sale de los límites de la matriz
+    //     if (x + objeto.ancho > matrizAncho || y + objeto.alto > matrizAlto) {
+    //         // Calcular la nueva posición dentro de la matriz
+    //         x = Math.min(x, matrizAncho - objeto.ancho);
+    //         y = Math.min(y, matrizAlto - objeto.alto);
+    //     }
+
+    //     // Verificar si hay algún otro objeto en el espacio de la matriz
+    //     for (int i = x; i < x + objeto.ancho; i++) {
+    //         for (int j = y; j < y + objeto.alto; j++) {
+    //             if (matriz[i][j] != null) {
+    //                 // Si ya hay un objeto en esta posición, puedes manejarlo según tus necesidades
+    //                 // Puedes lanzar una excepción, ignorar la colocación del objeto o realizar cualquier otra acción
+    //                 // Aquí se muestra un ejemplo de lanzar una excepción:
+    //                 JOptionPane.showMessageDialog(null, "Ya hay un objeto en la posición (" + i + ", " + j + ")");
+    //                 return;
+    //             }
+    //         }
+    //     }
+
+    //     // Colocar el objeto en la matriz
+    //     for (int i = x; i < x + objeto.ancho; i++) {
+    //         for (int j = y; j < y + objeto.alto; j++) {
+    //             matriz[i][j] = objeto;
+    //             matrizBotones[i][j].setBackground(objeto.color);
+    //         }
+    //     }
+    // }
+
+
+//     public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
+//     int matrizAncho = matriz.length;
+//     int matrizAlto = matriz[0].length;
+
+//     // Verificar si el objeto se sale de los límites de la matriz
+//     if (x + objeto.ancho > matrizAncho || y + objeto.alto > matrizAlto) {
+//         // Calcular la nueva posición dentro de la matriz
+//         x = Math.min(x, matrizAncho - objeto.ancho);
+//         y = Math.min(y, matrizAlto - objeto.alto);
+//     }
+
+//     // Buscar la primera posición disponible para colocar el objeto
+//     boolean objetoColocado = false;
+//     for (int i = x; i <= matrizAncho - objeto.ancho && !objetoColocado; i++) {
+//         for (int j = y; j <= matrizAlto - objeto.alto && !objetoColocado; j++) {
+//             boolean hayColision = verificarColision(objeto, i, j, matriz);
+//             if (!hayColision) {
+//                 // Colocar el objeto en la posición encontrada
+//                 colocarObjetoEnPosicion(objeto, i, j, matriz, matrizBotones);
+//                 objetoColocado = true;
+//             }
+//         }
+//     }
+
+//     // Si no se pudo colocar el objeto, mostrar un mensaje de error
+//     if (!objetoColocado) {
+//         JOptionPane.showMessageDialog(null, "No hay espacio suficiente para colocar el objeto.");
+//     }
+// }
+
+    public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
+        int matrizAncho = matriz.length;
+        int matrizAlto = matriz[0].length;
+
+        // Verificar si el objeto se sale de los límites de la matriz
+        if (x + objeto.ancho > matrizAncho || y + objeto.alto > matrizAlto) {
+            // Calcular la nueva posición dentro de la matriz
+            x = Math.min(x, matrizAncho - objeto.ancho);
+            y = Math.min(y, matrizAlto - objeto.alto);
+        }
+
+        // Buscar la primera posición disponible para colocar el objeto
+        boolean objetoColocado = false;
+        for (int i = x; i <= matrizAncho - objeto.ancho && !objetoColocado; i++) {
+            for (int j = y; j <= matrizAlto - objeto.alto && !objetoColocado; j++) {
+                boolean hayColision = verificarColision(objeto, i, j, matriz);
+                if (!hayColision && (i == x || j == y)) {
+                    // Colocar el objeto en la posición encontrada
+                    colocarObjetoEnPosicion(objeto, i, j, matriz, matrizBotones);
+                    objetoColocado = true;
+                }
+            }
+        }
+
+        // Si no se pudo colocar el objeto, mostrar un mensaje de error
+        if (!objetoColocado) {
+            JOptionPane.showMessageDialog(null, "No hay espacio suficiente para colocar el objeto manteniendo una posición fija.");
+        }
+    }
+
+    private boolean verificarColision(Entidad objeto, int x, int y, Entidad[][] matriz) {
         for (int i = x; i < x + objeto.ancho; i++) {
             for (int j = y; j < y + objeto.alto; j++) {
-                matriz[i][j] = objeto; // 'O' representa el objeto en el tablero
+                if (matriz[i][j] != null) {
+                    return true; // Hay un objeto en esta posición, hay colisión
+                }
+            }
+        }
+        return false; // No hay colisión
+    }
+
+    private void colocarObjetoEnPosicion(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
+        for (int i = x; i < x + objeto.ancho; i++) {
+            for (int j = y; j < y + objeto.alto; j++) {
+                matriz[i][j] = objeto;
                 matrizBotones[i][j].setBackground(objeto.color);
             }
         }
     }
+
 
     public void generarFrameComponentes(){
         if(!hecho){
@@ -238,6 +344,31 @@ public class Main {
         JButton botonTemplo = new JButton("Templo");
         ActionListenersComp(botonTemplo, new Templo());
         frameComponentes.add(botonTemplo, gbc);
+        
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        JLabel LabelComponentes = new JLabel("Componentes");
+        frameComponentes.add(LabelComponentes, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        JButton botonConectores = new JButton("Conectores");
+        ActionListenersComp(botonConectores, new Conector());
+        frameComponentes.add(botonConectores, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        JButton botonFuenteEnergia = new JButton("Fuente Energía");
+        ActionListenersComp(botonFuenteEnergia, new FuenteDeEnergia());
+        frameComponentes.add(botonFuenteEnergia, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        JButton botonMercado = new JButton("Mercado");
+        ActionListenersComp(botonMercado, new Mercado());
+        frameComponentes.add(botonMercado, gbc);
+
+
         hecho = true;
         }
         frameComponentes.setVisible(true);

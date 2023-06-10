@@ -19,7 +19,7 @@ public class Grafo {
     }
 
     // agrega a la lista
-    public void agregarVertice(int valor)
+    public void agregarVertice(Entidad valor)
     {
         vertices.add(new Vertice(valor));
     }
@@ -32,14 +32,14 @@ public class Grafo {
     }
 
     // agrega las aristas con peso
-    public void agregarArista(Vertice origen, Vertice destino, int peso)
-    {
-        if (origen != null && destino != null)
-            origen.agregarArista(destino, peso);
-    }
+    // public void agregarArista(Vertice origen, Vertice destino, int peso)
+    // {
+    //     if (origen != null && destino != null)
+    //         origen.agregarArista(destino, peso);
+    // }
 
     // busca un vertice en la lista
-    public Vertice buscarVertice (int valor){
+    public Vertice buscarVertice (Entidad valor){
 
         for (int i = 0; i < vertices.size(); i++) {
             if (vertices.get(i).dato == valor)

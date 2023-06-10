@@ -10,25 +10,33 @@ import java.util.ArrayList;
  * @author dmora
  */
 public class Vertice {
-    public int dato;
+    public Entidad dato;
     boolean visitado;
     ArrayList<Vertice> aristas;
     int peso;//peso
 
     // cosntructor
-    public Vertice(int dato)
-    {
-        aristas = new ArrayList<Vertice>();
-        this.dato = dato;
-        this.visitado = false;
-    }
+    // public Vertice(int dato)
+    // {
+    //     aristas = new ArrayList<Vertice>();
+    //     this.dato = dato;
+    //     this.visitado = false;
+    // }
 
-    public Vertice(int dato, int peso)
+    // public Vertice(int dato, int peso)
+    // {
+    //     aristas = new ArrayList<Vertice>();
+    //     this.dato = dato;
+    //     this.visitado = false;
+    //     this.peso = peso;
+    // }
+
+    public Vertice(Entidad entidad)
     {
         aristas = new ArrayList<Vertice>();
-        this.dato = dato;
+        this.dato = entidad;
         this.visitado = false;
-        this.peso = peso;
+        this.peso = entidad.ancho;
     }
 
     public void agregarArista (Vertice arista)
@@ -38,12 +46,12 @@ public class Vertice {
             aristas.add(new Vertice(arista.dato));
     }
     
-    public void agregarArista (Vertice arista, int peso)
-    {
-        // si no está la arista para no repetir
-        if (buscarArista(arista) == -1)
-            aristas.add(new Vertice(arista.dato, peso));
-    }
+    // public void agregarArista (Vertice arista, int peso)
+    // {
+    //     // si no está la arista para no repetir
+    //     if (buscarArista(arista) == -1)
+    //         aristas.add(new Vertice(arista.dato, peso));
+    // }
 
     public int buscarArista(Vertice v)
     {
