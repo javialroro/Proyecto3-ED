@@ -5,7 +5,7 @@ public class Barco extends Entidad{
         super();
         ancho = 1;
         alto = 1;
-        color = new Color(0, 0, 255);
+        color = Color.BLUE;
 
     }
 }

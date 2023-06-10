@@ -20,6 +20,8 @@ public class Main {
 
     JFrame frameComponentes = new JFrame("Componentes");
 
+    JFrame Mercado = new JFrame("Mercado");
+
     JPanel panelIzq = new JPanel();
     JPanel panelDer = new JPanel();
 
@@ -148,6 +150,7 @@ public class Main {
 
                         if (componenteSeleccionado != null && matriz[finalR][finalC] == null) {
                             if(cantidadComponenteSeleccionado > 0) {
+
                                 if (componenteSeleccionado instanceof Armeria) {
                                     componentSelect(new Armeria(), finalR, finalC, matriz, matrizBotones, cantidadArmerias);
                                 }
@@ -181,8 +184,10 @@ public class Main {
                                 else if(componenteSeleccionado instanceof FuenteDeEnergia){
                                     componentSelect(new FuenteDeEnergia(), finalR, finalC, matriz, matrizBotones, cantidadFuentes);
                                 }
+
                                 else{
                                     JOptionPane.showMessageDialog(null, "No hay componente seleccionado");
+                                    System.out.println("PRIMERO");
                                 }
 
 
@@ -191,8 +196,36 @@ public class Main {
                                 JOptionPane.showMessageDialog(null, "No hay mas componentes de este tipo");
                             }
                         }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.YELLOW){
+                            JOptionPane.showMessageDialog(null, "Conector");
+
+                        }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.BLACK){
+                            JOptionPane.showMessageDialog(null, "Fabrica");
+
+                        }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.BLUE){
+                            JOptionPane.showMessageDialog(null, "Barco");
+                        }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.magenta){
+                            JOptionPane.showMessageDialog(null, "Fuente de Energia");
+                        }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.green){
+                            JOptionPane.showMessageDialog(null, "Mina");
+                        }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.ORANGE){
+                            JOptionPane.showMessageDialog(null, "Templo");
+                        }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.cyan){
+                            generarFrameMercado();
+                        }
+                        else if(matrizBotones[finalR][finalC].getBackground() == Color.pink) {
+                            JOptionPane.showMessageDialog(null, "Armeria");
+                        }
+
                         else{
                             JOptionPane.showMessageDialog(null, "No hay componente seleccionado");
+                            System.out.println(matrizBotones[finalR][finalC].getBackground());
                         }
                     }
                 });
@@ -375,6 +408,56 @@ public class Main {
 
 
     }
+
+    public void generarFrameMercado() {
+        JFrame Mercado = new JFrame();
+        Mercado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Mercado.setSize(300, 300);
+        Mercado.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton boton1 = new JButton("vender cañon");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        Mercado.add(boton1, gbc);
+
+        JButton boton2 = new JButton("Vender cañon BR");
+        gbc.gridy = 1;
+        Mercado.add(boton2, gbc);
+
+        JButton boton3 = new JButton("Vender cañon M");
+        gbc.gridy = 2;
+        Mercado.add(boton3, gbc);
+
+        JButton boton7 = new JButton("Vender tu acero");
+        gbc.gridy = 3;
+        Mercado.add(boton7, gbc);
+
+        JButton boton4 = new JButton("Comprar cañon");
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        Mercado.add(boton4, gbc);
+
+        JButton boton5 = new JButton("Comprar cañon BR");
+        gbc.gridy = 1;
+        Mercado.add(boton5, gbc);
+
+        JButton boton6 = new JButton("Comprar cañon M");
+        gbc.gridy = 2;
+        Mercado.add(boton6, gbc);
+
+        JButton boton8 = new JButton("Comprar 10 de acero");
+        gbc.gridy = 3;
+        Mercado.add(boton8, gbc);
+
+        Mercado.setVisible(true);
+    }
+
+
+
 
     public void componentSelect(Entidad componente, int finalR, int finalC, Entidad[][] matriz, JButton[][] matrizBotones, int cantidad){
         colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);

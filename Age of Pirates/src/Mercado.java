@@ -5,6 +5,6 @@ public class Mercado extends Entidad{
         super();
         ancho = 2;
         alto = 1;
-        color = new Color(6, 239, 200);
+        color = Color.cyan;
     }
 }

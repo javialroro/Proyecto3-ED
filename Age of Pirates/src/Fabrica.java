@@ -5,7 +5,7 @@ public class Fabrica extends Entidad{
         super();
         ancho = 2;
         alto = 1;
-        color = new Color(250, 246, 5);
+        color = Color.BLACK;
     }
 
 }
