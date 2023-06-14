@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,16 +7,12 @@ import java.awt.event.ActionListener;
 
 public class Main {
     boolean hecho = false;
-    Entidad[][] matriz1 = new Entidad[20][20];
-    Entidad[][] matriz2 = new Entidad[20][20];
-    Entidad[][] matriz3 = new Entidad[20][20];
-    Entidad[][] matriz4 = new Entidad[20][20];
 
-    JButton[][] matrizBotones1 = new JButton[20][20];
+    Jugador jugador1 = new Jugador();
+    Jugador jugador2 = new Jugador();
+    Jugador jugador3 = new Jugador();
+    Jugador jugador4 = new Jugador();
 
-    JButton[][] matrizBotones2 = new JButton[20][20];
-    JButton[][] matrizBotones3 = new JButton[20][20];
-    JButton[][] matrizBotones4 = new JButton[20][20];
 
     JFrame frame = new JFrame("Age of Pirates");
 
@@ -39,20 +37,7 @@ public class Main {
 
     int cantidadComponenteSeleccionado = 5;
 
-    int cantidadFuentes = 1;
-    int cantidadMercados = 1;
 
-    int cantidadConectores = 0;
-    int cantidadBarcos = 0;
-
-    int cantidadBombas = 0;
-    int cantidadCanon = 0;
-    int cantidadCanonBR = 0;
-    int cantidadCanonM = 0;
-
-    int cantidadMinas = 0;
-    int cantidadTemplos = 0;
-    int cantidadArmerias = 0;
 
 
 
@@ -71,8 +56,8 @@ public class Main {
         panelDer.setMinimumSize(minSize);
         panelDer.setPreferredSize(minSize);
 
-        dibujarMatrizJ(matriz1, panelIzq, matrizBotones1);
-        dibujarMatrizJ(matriz2, panelDer, matrizBotones2);
+        dibujarMatrizJ(jugador1.matriz, panelIzq, jugador1.matrizBotones, jugador1);
+        //dibujarMatrizJ(matriz2, panelDer, matrizBotones2, jugador2);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -131,107 +116,147 @@ public class Main {
                 generarFrameComponentes();
             }
         });
+
+        siguienteTurno.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cambiarTurno();
+            }
+        });
         frame.add(Componentes, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        JButton botonIniciar = new JButton("Iniciar");
+        frame.add(botonIniciar, gbc);
 
         //frame.pack();
         frame.setVisible(true);
     }
 
-    public void dibujarMatrizJ(Entidad[][] matriz, JPanel panelMatriz, JButton[][] matrizBotones) {
+    public void cambiarTurno(){
+        if(turno == 1){
+            //panelIzq.removeAll();
+            dibujarMatrizJ(jugador2.matriz, panelIzq, jugador2.matrizBotones, jugador2);
+            turno = 2;
+
+        }
+        else if(turno == 2){
+            //panelIzq.removeAll();
+            dibujarMatrizJ(jugador3.matriz, panelIzq, jugador3.matrizBotones, jugador3);
+            turno = 3;
+        }
+        else if(turno == 3){
+            //panelIzq.removeAll();
+            dibujarMatrizJ(jugador4.matriz, panelIzq, jugador4.matrizBotones, jugador4);
+            turno = 4;
+        }
+        else if(turno == 4){
+            //panelIzq.removeAll();
+            dibujarMatrizJ(jugador1.matriz, panelIzq, jugador1.matrizBotones, jugador1);
+            turno = 1;
+        }
+        System.out.println("Turno: " + turno);
+    }
+
+    public void dibujarMatrizJ(Entidad[][] matriz, JPanel panelMatriz, JButton[][] matrizBotones,Jugador jugador) {
+        panelMatriz.removeAll();
         for (int r = 0; r < 20; r++) {
             for (int c = 0; c < 20; c++) {
                 matrizBotones[r][c] = new JButton();
+                if(matrizBotones[r][c].getActionListeners().length >0){
+                    //matrizBotones[r][c].removeActionListener(matrizBotones[r][c].getActionListeners()[0]);
+                }
+                if(matriz[r][c]== null) {
+                    matrizBotones[r][c].setBackground(Color.WHITE);
+                }
+                else {
+                    matrizBotones[r][c].setBackground(matriz[r][c].color);
+                }
+
+
                 int finalR = r;
                 int finalC = c;
+
+                int finalC1 = c;
+                int finalR1 = r;
 
                 matrizBotones[r][c].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
 
-                        if (componenteSeleccionado != null && matriz[finalR][finalC] == null) {
-                            if(cantidadComponenteSeleccionado > 0) {
+                        if (componenteSeleccionado != null ) {
+                            if(matriz[finalR1][finalC1]== null){
+                                if(cantidadComponenteSeleccionado>0) {
 
-                                if (componenteSeleccionado instanceof Armeria) {
-                                    componentSelect(new Armeria(), finalR, finalC, matriz, matrizBotones, cantidadArmerias);
+                                    if (componenteSeleccionado instanceof Armeria) {
+                                        componentSelect(new Armeria(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof Mina) {
+                                        componentSelect(new Mina(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof Templo) {
+                                        componentSelect(new Templo(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof Canon) {
+                                        componentSelect(new Canon(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof CanonBR) {
+                                        componentSelect(new CanonBR(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof CanonM) {
+                                        componentSelect(new CanonM(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof Bomba) {
+                                        componentSelect(new Bomba(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof Conector) {
+                                        componentSelect(new Conector(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof Barco) {
+                                        componentSelect(new Barco(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof Mercado) {
+                                        componentSelect(new Mercado(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else if (componenteSeleccionado instanceof FuenteDeEnergia) {
+                                        componentSelect(new FuenteDeEnergia(), finalR, finalC, matriz, matrizBotones,jugador);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "No hay componente seleccionado");
+                                        System.out.println("PRIMERO");
+                                    }
                                 }
-                                else if (componenteSeleccionado instanceof Mina){
-                                    componentSelect(new Mina(), finalR, finalC, matriz, matrizBotones, cantidadMinas);
-                                }
-                                else if(componenteSeleccionado instanceof Templo){
-                                    componentSelect(new Templo(), finalR, finalC, matriz, matrizBotones, cantidadTemplos);
-                                }
-                                else if(componenteSeleccionado instanceof Canon){
-                                    componentSelect(new Canon(), finalR, finalC, matriz, matrizBotones, cantidadCanon);
-                                }
-                                else if(componenteSeleccionado instanceof CanonBR){
-                                    componentSelect(new CanonBR(), finalR, finalC, matriz, matrizBotones, cantidadCanonBR);
-                                }
-                                else if(componenteSeleccionado instanceof CanonM){
-                                    componentSelect(new CanonM(), finalR, finalC, matriz, matrizBotones, cantidadCanonM);
-                                }
-                                else if(componenteSeleccionado instanceof Bomba){
-                                    componentSelect(new Bomba(), finalR, finalC, matriz, matrizBotones, cantidadBombas);
-                                }
-                                else if(componenteSeleccionado instanceof Conector){
-                                    componentSelect(new Conector(), finalR, finalC, matriz, matrizBotones, cantidadConectores);
-                                }
-                                else if(componenteSeleccionado instanceof Barco){
-                                    componentSelect(new Barco(), finalR, finalC, matriz, matrizBotones, cantidadBarcos);
-                                }
-                                else if(componenteSeleccionado instanceof Mercado){
-                                    componentSelect(new Mercado(), finalR, finalC, matriz, matrizBotones, cantidadMercados);
-                                }
-                                else if(componenteSeleccionado instanceof FuenteDeEnergia){
-                                    componentSelect(new FuenteDeEnergia(), finalR, finalC, matriz, matrizBotones, cantidadFuentes);
-                                }
-
                                 else{
-                                    JOptionPane.showMessageDialog(null, "No hay componente seleccionado");
-                                    System.out.println("PRIMERO");
+                                    JOptionPane.showMessageDialog(null, "No hay componentes disponibles");
                                 }
-
-
                             }
-                            else{
-                                JOptionPane.showMessageDialog(null, "No hay mas componentes de este tipo");
+                            else {
+                                if (matrizBotones[finalR][finalC].getBackground() == Color.YELLOW) {
+                                    JOptionPane.showMessageDialog(null, "Conector");
+
+                                } else if (matrizBotones[finalR][finalC].getBackground() == Color.BLACK) {
+                                    JOptionPane.showMessageDialog(null, "Fabrica");
+
+                                } else if (matrizBotones[finalR][finalC].getBackground() == Color.BLUE) {
+                                    JOptionPane.showMessageDialog(null, "Barco");
+                                } else if (matrizBotones[finalR][finalC].getBackground() == Color.magenta) {
+                                    JOptionPane.showMessageDialog(null, "Fuente de Energia");
+                                } else if (matrizBotones[finalR][finalC].getBackground() == Color.green) {
+                                    JOptionPane.showMessageDialog(null, "Mina");
+                                } else if (matrizBotones[finalR][finalC].getBackground() == Color.ORANGE) {
+                                    JOptionPane.showMessageDialog(null, "Templo");
+                                } else if (matrizBotones[finalR][finalC].getBackground() == Color.cyan) {
+                                    generarFrameMercado();
+                                } else if (matrizBotones[finalR][finalC].getBackground() == Color.pink) {
+                                    JOptionPane.showMessageDialog(null, "Armeria");
+                                }
                             }
-                        }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.YELLOW){
-                            JOptionPane.showMessageDialog(null, "Conector");
 
                         }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.BLACK){
-                            JOptionPane.showMessageDialog(null, "Fabrica");
-
-                        }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.BLUE){
-                            JOptionPane.showMessageDialog(null, "Barco");
-                        }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.magenta){
-                            JOptionPane.showMessageDialog(null, "Fuente de Energia");
-                        }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.green){
-                            JOptionPane.showMessageDialog(null, "Mina");
-                        }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.ORANGE){
-                            JOptionPane.showMessageDialog(null, "Templo");
-                        }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.cyan){
-                            generarFrameMercado();
-                        }
-                        else if(matrizBotones[finalR][finalC].getBackground() == Color.pink) {
-                            JOptionPane.showMessageDialog(null, "Armeria");
-                        }
-
                         else{
                             JOptionPane.showMessageDialog(null, "No hay componente seleccionado");
-                            System.out.println(matrizBotones[finalR][finalC].getBackground());
+                            //System.out.println(matrizBotones[finalR][finalC].getBackground());
                         }
+
                     }
                 });
                 panelMatriz.add(matrizBotones[r][c]);
+
             }
+
         }
+        panelMatriz.repaint();
+        panelMatriz.revalidate();
+        //System.out.println("Turno: " + turno);
     }
 
     // public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
@@ -459,9 +484,100 @@ public class Main {
 
 
 
-    public void componentSelect(Entidad componente, int finalR, int finalC, Entidad[][] matriz, JButton[][] matrizBotones, int cantidad){
-        colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
-        cantidad--;
+    public void componentSelect(Entidad componente, int finalR, int finalC, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador){
+        if (componente instanceof Armeria) {
+            if(jugador.cantidadArmerias > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadArmerias--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        } else if (componente instanceof Mina) {
+            if(jugador.cantidadMinas > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadMinas--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+
+        } else if (componente instanceof Templo) {
+            if(jugador.cantidadTemplos > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadTemplos--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+
+        } else if (componente instanceof Canon) {
+            if(jugador.cantidadCanon > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadCanon--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+
+        } else if (componente instanceof CanonBR) {
+            if(jugador.cantidadCanonBR > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadCanonBR--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        } else if (componente instanceof CanonM) {
+            if(jugador.cantidadCanonM > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadCanonM--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        } else if (componente instanceof Bomba) {
+            if(jugador.cantidadBombas > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadBombas--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        } else if (componente instanceof Conector) {
+            if(jugador.cantidadConectores > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadConectores--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        } else if (componente instanceof Barco) {
+            if(jugador.cantidadBarcos > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadBarcos--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        } else if (componente instanceof Mercado) {
+            if(jugador.cantidadMercados > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadMercados--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        } else if (componente instanceof FuenteDeEnergia) {
+            if(jugador.cantidadFuentes > 0){
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                jugador.cantidadFuentes--;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "No hay componentes");
+            }
+        }
+
     }
 
     public static void main(String[] args) {
@@ -474,10 +590,26 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 setComponente(componente);
             }
+
         });
     }
 
     public void setComponente(Entidad componente){
         this.componenteSeleccionado = componente;
     }
+
+    public void borrarActionListeners(JButton [][] botones){
+        for(int i = 0; i < botones.length; i++){
+            for(int j = 0; j < botones[0].length; j++){
+                if(botones[i][j].getBackground() == Color.WHITE){
+                    for(ActionListener al : botones[i][j].getActionListeners()){
+                        botones[i][j].removeActionListener(al);
+                    }
+                }
+            }
+        }
+    }
+
+
+
 }

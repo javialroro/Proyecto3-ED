@@ -54,7 +54,7 @@ public class Grafo {
     {
         for (int i = 0; i < vertices.size(); i++)
         {
-            System.out.print("Vertice "+vertices.get(i).dato+":  ");
+            System.out.print("Vertice "+vertices.get(i).dato.toString()+":  ");
             for (int j = 0; j < vertices.get(i).aristas.size(); j++) {
                 System.out.print(vertices.get(i).aristas.get(j).dato +"  ");
             }
