@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class Jugador {
     int cantidadFuentes = 1;
@@ -16,8 +17,12 @@ public class Jugador {
     int cantidadTemplos = 0;
     int cantidadArmerias = 0;
 
-    Entidad[][] matriz = new Entidad[20][20];
+    int dinero = 1000;
 
+    int acero = 0;
+
+
+    Entidad[][] matriz = new Entidad[20][20];
 
     JButton[][] matrizBotones = new JButton[20][20];
 
