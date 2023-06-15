@@ -242,9 +242,27 @@ public class Main {
                                 if(cantidadComponenteSeleccionado>0) {
 
                                     if (componenteSeleccionado instanceof Armeria) {
-                                        componentSelect(new Armeria(), finalR, finalC, matriz, matrizBotones,jugador);
+                                        if(((Armeria) componenteSeleccionado).arma==1){
+                                            componentSelect(new Armeria(1), finalR, finalC, matriz, matrizBotones,jugador);
+                                        }
+                                        else if(((Armeria) componenteSeleccionado).arma == 2){
+                                            componentSelect(new Armeria(2), finalR, finalC, matriz, matrizBotones,jugador);
+                                        }
+                                        else if(((Armeria) componenteSeleccionado).arma == 3){
+                                            componentSelect(new Armeria(3), finalR, finalC, matriz, matrizBotones,jugador);
+                                        }
+
+                                        else if(((Armeria) componenteSeleccionado).arma == 4){
+                                            componentSelect(new Armeria(4), finalR, finalC, matriz, matrizBotones,jugador);
+
+                                        }
                                     } else if (componenteSeleccionado instanceof Mina) {
-                                        componentSelect(new Mina(), finalR, finalC, matriz, matrizBotones,jugador);
+                                        if(jugador.cantidadMinas > 0){
+                                        Mina x = new Mina();
+                                        x.y = jugador.cantidadMinas;
+                                        componentSelect(x, finalR, finalC, matriz, matrizBotones,jugador);
+                                        x.iniciarThread();
+                                        }
                                     } else if (componenteSeleccionado instanceof Templo) {
                                         componentSelect(new Templo(), finalR, finalC, matriz, matrizBotones,jugador);
                                     } else if (componenteSeleccionado instanceof Canon) {
@@ -284,13 +302,24 @@ public class Main {
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.magenta) {
                                     JOptionPane.showMessageDialog(null, "Fuente de Energia");
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.green) {
-                                    JOptionPane.showMessageDialog(null, "Mina");
+
+                                    generarFrameMina((Mina) matriz[finalR][finalC],jugador);
+
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.ORANGE) {
                                     JOptionPane.showMessageDialog(null, "Templo");
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.cyan) {
-                                    generarFrameMercado();
+                                    generarFrameMercado(jugador);
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.pink) {
-                                    JOptionPane.showMessageDialog(null, "Armeria");
+                                    generarFrameArmeriaCañon(jugador);
+                                }
+                                else if(matrizBotones[finalR][finalC].getBackground() == Color.red){
+                                    generarFrameArmeriaCañonMultiple(jugador);
+                                }
+                                else if(matrizBotones[finalR][finalC].getBackground() == Color.lightGray){
+                                    generarFrameArmeriaCañonBR(jugador);
+                                }
+                                else if(matrizBotones[finalR][finalC].getBackground() == Color.darkGray){
+                                    generarFrameArmeriaBomba(jugador);
                                 }
                             }
 
@@ -440,112 +469,422 @@ public class Main {
         return row >= 0 && row < numRows && col >= 0 && col < numCols;
     }
 
-    public void generarFrameComponentes(){
-        if(!hecho){
-        frameComponentes.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frameComponentes.setSize(500, 500);
-        frameComponentes.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.4; // Ajusta el peso para reducir el tamaño
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        JLabel LabelFabricas = new JLabel("Fabricas");
-        frameComponentes.add(LabelFabricas, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        JButton botonFuente = new JButton("Armeria");
-        ActionListenersComp(botonFuente, new Armeria());
-        frameComponentes.add(botonFuente, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        JButton botonMina = new JButton("Mina");
-        ActionListenersComp(botonMina, new Mina());
-        frameComponentes.add(botonMina, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        JButton botonTemplo = new JButton("Templo");
-        ActionListenersComp(botonTemplo, new Templo());
-        frameComponentes.add(botonTemplo, gbc);
-        
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        JLabel LabelComponentes = new JLabel("Componentes");
-        frameComponentes.add(LabelComponentes, gbc);
+    public void generarFrameComponentes() {
+        if (!hecho) {
+            frameComponentes.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frameComponentes.setSize(500, 500);
+            frameComponentes.setLayout(new GridBagLayout());
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 0.4; // Ajusta el peso para reducir el tamaño
+            gbc.weighty = 1.0;
+            gbc.fill = GridBagConstraints.BOTH;
 
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        JButton botonConectores = new JButton("Conectores");
-        ActionListenersComp(botonConectores, new Conector());
-        frameComponentes.add(botonConectores, gbc);
+            JLabel LabelFabricas = new JLabel("Fabricas");
+            frameComponentes.add(LabelFabricas, gbc);
 
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        JButton botonFuenteEnergia = new JButton("Fuente Energía");
-        ActionListenersComp(botonFuenteEnergia, new FuenteDeEnergia());
-        frameComponentes.add(botonFuenteEnergia, gbc);
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            JButton botonFuente = new JButton("Armeria Cañon");
+            ActionListenersComp(botonFuente, new Armeria(1));
+            frameComponentes.add(botonFuente, gbc);
 
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        JButton botonMercado = new JButton("Mercado");
-        ActionListenersComp(botonMercado, new Mercado());
-        frameComponentes.add(botonMercado, gbc);
+            gbc.gridy = 2;
+            JButton botonMina = new JButton("Mina");
+            ActionListenersComp(botonMina, new Mina());
+            frameComponentes.add(botonMina, gbc);
 
+            gbc.gridy = 3;
+            JButton botonTemplo = new JButton("Templo");
+            ActionListenersComp(botonTemplo, new Templo());
+            frameComponentes.add(botonTemplo, gbc);
 
-        hecho = true;
+            gbc.gridy = 4;
+            JButton botonArmeriaMultiple = new JButton("Armeria Cañon Multiple");
+            ActionListenersComp(botonArmeriaMultiple, new Armeria(2));
+            frameComponentes.add(botonArmeriaMultiple, gbc);
+
+            gbc.gridy = 5;
+            JButton botonArmeriaBarbaRoja = new JButton("Armeria Cañon Barba Roja");
+            ActionListenersComp(botonArmeriaBarbaRoja, new Armeria(3));
+            frameComponentes.add(botonArmeriaBarbaRoja, gbc);
+
+            gbc.gridy = 6;
+            JButton botonArmeriaBomba = new JButton("Armeria Bomba");
+            ActionListenersComp(botonArmeriaBomba, new Armeria(4));
+            frameComponentes.add(botonArmeriaBomba, gbc);
+
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            JLabel LabelComponentes = new JLabel("Componentes");
+            frameComponentes.add(LabelComponentes, gbc);
+
+            gbc.gridy = 1;
+            JButton botonConectores = new JButton("Conectores");
+            ActionListenersComp(botonConectores, new Conector());
+            frameComponentes.add(botonConectores, gbc);
+
+            gbc.gridy = 2;
+            JButton botonFuenteEnergia = new JButton("Fuente Energía");
+            ActionListenersComp(botonFuenteEnergia, new FuenteDeEnergia());
+            frameComponentes.add(botonFuenteEnergia, gbc);
+
+            gbc.gridy = 3;
+            JButton botonMercado = new JButton("Mercado");
+            ActionListenersComp(botonMercado, new Mercado());
+            frameComponentes.add(botonMercado, gbc);
+
+            hecho = true;
         }
         frameComponentes.setVisible(true);
-
-
     }
 
-    public void generarFrameMercado() {
+
+
+
+
+    public void generarFrameMercado(Jugador j) {
         JFrame Mercado = new JFrame();
         Mercado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Mercado.setSize(300, 300);
         Mercado.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        JButton boton1 = new JButton("vender cañon");
+        JButton boton1 = new JButton("vender cañon (recibes 100 de oro)");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0.4;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         Mercado.add(boton1, gbc);
+        boton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.cantidadCanon>0){
+                    j.dinero+=100;
+                    j.cantidadCanon--;
+                    JOptionPane.showMessageDialog(null, "Cañon Vendido");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes cañones para vender");
 
-        JButton boton2 = new JButton("Vender cañon BR");
+                }
+
+            }
+
+        });
+
+
+        JButton boton2 = new JButton("Vender cañon BR (recibes 200 de oro)");
         gbc.gridy = 1;
         Mercado.add(boton2, gbc);
+        boton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.cantidadCanonBR>0){
+                    j.dinero+=200;
+                    j.cantidadCanonBR--;
+                    JOptionPane.showMessageDialog(null, "Cañon Barba Roja Vendido");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes cañones para vender");
 
-        JButton boton3 = new JButton("Vender cañon M");
+                }
+
+            }
+
+        });
+
+
+        JButton boton3 = new JButton("Vender cañon M (recibe 150 de oro)");
         gbc.gridy = 2;
         Mercado.add(boton3, gbc);
+        boton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.cantidadCanonM>0){
+                    j.dinero+=150;
+                    j.cantidadCanonM--;
+                    JOptionPane.showMessageDialog(null, "Cañon Multiple Vendido");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes cañones para vender");
 
-        JButton boton7 = new JButton("Vender tu acero");
+                }
+            }
+
+        });
+
+
+
+
+
+
+        JButton boton7 = new JButton("Vender tu acero (recibes la cantidad de acero en oro)");
         gbc.gridy = 3;
         Mercado.add(boton7, gbc);
+        boton7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.acero>0){
+                    j.dinero+=j.acero;
+                    j.acero=0;
+                    JOptionPane.showMessageDialog(null, "Acero Vendido");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes acero para vender");
 
-        JButton boton4 = new JButton("Comprar cañon");
+                }
+
+            }
+
+        });
+
+        JButton boton4 = new JButton("Comprar cañon (100 de oro)");
         gbc.gridx = 1;
         gbc.gridy = 0;
         Mercado.add(boton4, gbc);
+        boton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.dinero>=100){
+                    j.dinero-=100;
+                    j.cantidadCanon++;
+                    JOptionPane.showMessageDialog(null, "Cañon Comprado");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
 
-        JButton boton5 = new JButton("Comprar cañon BR");
+        });
+
+        JButton boton5 = new JButton("Comprar cañon BR (200 de oro)");
         gbc.gridy = 1;
         Mercado.add(boton5, gbc);
+        boton5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.dinero>=200){
+                    j.dinero-=200;
+                    j.cantidadCanonBR++;
+                    JOptionPane.showMessageDialog(null, "Cañon Barba Roja Comprado");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
 
-        JButton boton6 = new JButton("Comprar cañon M");
+        });
+
+        JButton boton6 = new JButton("Comprar cañon M (150 de oro)");
         gbc.gridy = 2;
         Mercado.add(boton6, gbc);
+        boton6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.dinero>=150){
+                    j.dinero-=150;
+                    j.cantidadCanon++;
+                    JOptionPane.showMessageDialog(null, "Cañon Multiple Comprado");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
 
-        JButton boton8 = new JButton("Comprar 10 de acero");
+        });
+
+        JButton boton8 = new JButton("Comprar 10 de acero (10 de oro)");
         gbc.gridy = 3;
         Mercado.add(boton8, gbc);
+        boton8.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(j.dinero>=10){
+                    j.dinero-=10;
+                    j.acero+=10;
+                    JOptionPane.showMessageDialog(null, "Acero Comprado");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
+
+        });
 
         Mercado.setVisible(true);
     }
+
+    public void generarFrameArmeriaCañon(Jugador j){
+        JFrame ArmeriaCañon = new JFrame();
+        ArmeriaCañon.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ArmeriaCañon.setSize(300, 300);
+        ArmeriaCañon.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton boton1 = new JButton("Fabricar Cañon (500kg)");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        ArmeriaCañon.add(boton1, gbc);
+
+        boton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.acero >= 500) {
+                    j.acero -= 500;
+                    j.cantidadCanon++;
+                    JOptionPane.showMessageDialog(null, "Cañon fabricado");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No hay suficiente acero");
+                }
+            }
+
+        });
+        ArmeriaCañon.setVisible(true);
+
+    }
+
+
+    public void generarFrameArmeriaCañonMultiple(Jugador j){
+        JFrame ArmeriaCañonM = new JFrame();
+        ArmeriaCañonM.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ArmeriaCañonM.setSize(300, 300);
+        ArmeriaCañonM.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton boton1 = new JButton("Fabricar Cañon Multiple(1000kg)");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        ArmeriaCañonM.add(boton1, gbc);
+
+        boton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.acero >= 1000) {
+                    j.acero -= 1000;
+                    j.cantidadCanonM++;
+                    JOptionPane.showMessageDialog(null, "Cañon Multiple fabricado");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No hay suficiente acero");
+                }
+            }
+
+        });
+        ArmeriaCañonM.setVisible(true);
+
+    }
+
+
+    public void generarFrameArmeriaCañonBR(Jugador j){
+        JFrame ArmeriaCañonBR = new JFrame();
+        ArmeriaCañonBR.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ArmeriaCañonBR.setSize(300, 300);
+        ArmeriaCañonBR.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton boton1 = new JButton("Fabricar Cañon Barba Roja(5000kg)");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        ArmeriaCañonBR.add(boton1, gbc);
+
+        boton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.acero >= 5000) {
+                    j.acero -= 5000;
+                    j.cantidadCanonBR++;
+                    JOptionPane.showMessageDialog(null, "Cañon Barba Roja fabricado");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No hay suficiente acero");
+                }
+            }
+
+        });
+        ArmeriaCañonBR.setVisible(true);
+
+    }
+
+
+
+    public void generarFrameArmeriaBomba(Jugador j){
+        JFrame ArmeriaBomba = new JFrame();
+        ArmeriaBomba.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        ArmeriaBomba.setSize(300, 300);
+        ArmeriaBomba.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton boton1 = new JButton("Fabricar Bomba(2000kg)");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        ArmeriaBomba.add(boton1, gbc);
+
+        boton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.acero >= 2000) {
+                    j.acero -= 2000;
+                    j.cantidadBombas+= 3;
+                    JOptionPane.showMessageDialog(null, "Bombas fabricadas");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No hay suficiente acero");
+                }
+            }
+
+        });
+        ArmeriaBomba.setVisible(true);
+
+    }
+
+    public void generarFrameMina(Mina m, Jugador j){
+        JFrame mina = new JFrame("Mina");
+        mina.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        mina.setSize(300, 300);
+        mina.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton boton1 = new JButton("recoger acero" + "(" + m.aceroGenerado + "kg)");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        mina.add(boton1, gbc);
+        boton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               if(m.aceroGenerado> 0){
+                   j.acero += m.aceroGenerado;
+                   JOptionPane.showMessageDialog(null, "Acero recogido: +" +  + m.aceroGenerado + "kg");
+                   m.aceroGenerado = 0;
+
+               }
+               else{
+                   JOptionPane.showMessageDialog(null, "No hay acero por recoger");
+               }
+            }
+
+        });
+        mina.setVisible(true);
+
+    }
+
+
+
+
 
 
 

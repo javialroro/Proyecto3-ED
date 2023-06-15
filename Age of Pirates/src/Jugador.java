@@ -10,20 +10,20 @@ public class Jugador {
     int cantidadBarcos = 0;
 
     int cantidadBombas = 0;
-    int cantidadCanon = 0;
-    int cantidadCanonBR = 0;
-    int cantidadCanonM = 0;
+    int cantidadCanon = 1;
+    int cantidadCanonBR = 1;
+    int cantidadCanonM = 1;
 
-    int cantidadMinas = 0;
+    int cantidadMinas = 2;
     int cantidadTemplos = 4;
-    int cantidadArmerias = 0;
+    int cantidadArmerias = 5;
 
-    int dinero = 1000;
+    int dinero = 100000;
 
-    int acero = 0;
+    int acero = 550;
     int numero = 0;
 
-
+    ArrayList<Mina> listaMinas = new ArrayList<Mina>();
     Entidad[][] matriz = new Entidad[20][20];
 
     JButton[][] matrizBotones = new JButton[20][20];
