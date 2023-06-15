@@ -6,5 +6,7 @@ public class Mercado extends Entidad{
         ancho = 2;
         alto = 1;
         color = Color.cyan;
+        vida = 2;
+        destruido = false;
     }
 }

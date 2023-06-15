@@ -9,9 +9,13 @@ public class Entidad {
 
     int alto;
 
+    int vida;
+
     boolean atacado;
 
     boolean tieneEnergia;
+
+    boolean destruido;
 
     Color color;
 }

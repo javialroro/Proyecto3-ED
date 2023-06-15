@@ -20,6 +20,8 @@ public class Armeria extends Fabrica{
         else {
         color = Color.darkGray;
         }
+
+        vida = 2;
     
     }
 }

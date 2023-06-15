@@ -19,7 +19,7 @@ public class Mina extends Fabrica{
                         Thread.sleep(1000);
                         con++;
                         System.out.println(con +" mina " + y);
-                        if(con == 60){
+                        if(con == 2){
                             con = 0;
                             aceroGenerado += 50;
                         }
@@ -29,6 +29,8 @@ public class Mina extends Fabrica{
                 }
             }
         });
+        vida = 2;
+
     }
 
     public void iniciarThread() {

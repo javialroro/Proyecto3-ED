@@ -7,6 +7,7 @@ public class FuenteDeEnergia extends Entidad{
         alto = 2;
         color = Color.magenta;
         tieneEnergia = true;
+        vida = 4;
     }
 
 

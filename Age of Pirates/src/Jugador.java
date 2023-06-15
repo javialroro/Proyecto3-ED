@@ -11,8 +11,8 @@ public class Jugador {
 
     int cantidadBombas = 0;
     int cantidadCanon = 1;
-    int cantidadCanonBR = 1;
-    int cantidadCanonM = 1;
+    int cantidadCanonBR = 0;
+    int cantidadCanonM = 0;
 
     int cantidadMinas = 2;
     int cantidadTemplos = 4;

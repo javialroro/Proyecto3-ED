@@ -6,6 +6,7 @@ public class Fabrica extends Entidad{
         ancho = 2;
         alto = 1;
         color = Color.BLACK;
+        vida = 2;
     }
 
 }

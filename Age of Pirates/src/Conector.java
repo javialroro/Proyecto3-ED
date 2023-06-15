@@ -6,5 +6,6 @@ public class Conector extends Entidad{
         ancho = 1;
         alto = 1;
         color = Color.yellow;
+        vida = 1;
     }
 }

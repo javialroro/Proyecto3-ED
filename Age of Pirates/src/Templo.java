@@ -6,5 +6,6 @@ public class Templo extends Fabrica{
         ancho = 1;
         alto = 1;
         color = Color.ORANGE;
+        vida = 2;
     }
 }

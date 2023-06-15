@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.*;
 
 public class Main {
@@ -173,7 +172,18 @@ public class Main {
         botonDisparar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                seleccionarArma();
+                if (turno == jugador1.numero) {
+                    seleccionarArma(jugador1);
+                }
+                else if (turno == jugador2.numero) {
+                    seleccionarArma(jugador2);
+                }
+                else if (turno == jugador3.numero) {
+                    seleccionarArma(jugador3);
+                }
+                else if (turno == jugador4.numero) {
+                    seleccionarArma(jugador4);
+                }
             }
         });
         frame.add(botonDisparar, gbc);
@@ -198,7 +208,7 @@ public class Main {
         frame.setVisible(true);
     }
 
-    public void seleccionarArma(){
+    public void seleccionarArma(Jugador j){
         JFrame seleccionArma = new JFrame();
         seleccionArma.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         seleccionArma.setSize(300, 300);
@@ -277,6 +287,21 @@ public class Main {
                 JOptionPane.showMessageDialog(null, "Coloque 3 cartuchos de dinamita en el mapa");
             }
         });
+
+
+        if(j.cantidadCanon == 0){
+            cannonNormal.setEnabled(false);
+        }
+        if(j.cantidadCanonM == 0){
+            canonMultiple.setEnabled(false);
+        }
+        if(j.cantidadCanonBR == 0){
+            canonBarbaRoja.setEnabled(false);
+        }
+        if(j.cantidadBombas == 0){
+            bomba.setEnabled(false);
+        }
+
 
 
         seleccionArma.setVisible(true);
@@ -451,22 +476,25 @@ public class Main {
             for (int c = 0; c < 20; c++) {
                 matrizBotones[r][c] = new JButton();
 
-                if(matriz[r][c]instanceof EntidadVacia) {
-                    if(!matriz[r][c].atacado) {
-                        matrizBotones[r][c].setBackground(Color.WHITE);
-                    }
-                    else {
-                        matrizBotones[r][c].setBackground(Color.RED);
-                    }
+                // if(matriz[r][c]instanceof EntidadVacia) {
+                //     if(!matriz[r][c].atacado) {
+                //         matrizBotones[r][c].setBackground(Color.WHITE);
+                //     }
+                //     else {
+                //         matrizBotones[r][c].setBackground(Color.RED);
+                //     }
+                // }
+                //else {
+                if (jugador.matrizAtaques[r][c] == 2 ) {
+                    matrizBotones[r][c].setBackground(Color.GREEN);
                 }
-                else {
-                    if (jugador.matrizAtaques[r][c] == 2 && matriz[r][c].atacado) {
-                        matrizBotones[r][c].setBackground(Color.GREEN);
-                    }
-                    else{
-                        matrizBotones[r][c].setBackground(Color.WHITE);
-                    }
+                else if(jugador.matrizAtaques[r][c] == 1){
+                    matrizBotones[r][c].setBackground(Color.RED);
                 }
+                else{
+                    matrizBotones[r][c].setBackground(Color.WHITE);
+                }
+                //}
 
                 panelMatriz.add(matrizBotones[r][c]);
                 int finalR = r;
@@ -509,7 +537,32 @@ public class Main {
                                 }
                                 cantidadDisparos = 0;
                                 JOptionPane.showMessageDialog(null, "Se han completado los disparos");
+                                
+                                matriz[finalR][finalC].vida -= 1;
+                                if (matriz[finalR][finalC].vida == 0) {
+                                    System.out.println("SE MUREEERE");
+                                }
                                 cambiarTurno();
+                                return;
+                            }
+                            matriz[finalR][finalC].vida -= 1;
+                            if (matriz[finalR][finalC].vida == 0) {
+                                matriz[finalR][finalC].destruido=true;
+                                borrarObjeto(matriz[finalR][finalC], finalR, finalC, matriz, matrizBotones,jugador);
+                                for(int i = 0; i < 20; i++){
+                                    for(int j = 0; j < 20; j++){
+                                        if(jugador.matrizAtaques[i][j] == 2){
+                                            matrizBotones[i][j].setBackground(Color.GREEN);
+                                        }
+                                        else if(jugador.matrizAtaques[i][j] == 1){
+                                            matrizBotones[i][j].setBackground(Color.RED);
+                                        }
+                                        else{
+                                            matrizBotones[i][j].setBackground(Color.WHITE);
+                                        }
+                                    }
+                                }
+                                JOptionPane.showMessageDialog(null, "Se ha destruido el objeto");
                                 return;
                             }
                         }
@@ -533,6 +586,17 @@ public class Main {
         panelMatriz.repaint();
         panelMatriz.revalidate();
     }
+
+    public void borrarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador){
+        for(int i = 0; i < 20; i++){
+            for(int j = 0; j < 20; j++){
+                if(matriz[i][j].destruido){
+                    matriz[i][j] = new EntidadVacia();
+                }
+            }
+        }
+    }
+
 
     public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador) {
         int matrizAncho = matriz.length;
