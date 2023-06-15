@@ -32,7 +32,10 @@ public class Main {
 
     JButton Componentes = new JButton("Componentes");
 
+    JButton botonEnviarMensaje = new JButton("Enviar mensaje");
+
     JTextArea chat = new JTextArea();
+    JTextArea mensaje = new JTextArea();
 
     Entidad componenteSeleccionado = null;
 
@@ -159,7 +162,23 @@ public class Main {
         JButton botonIniciar = new JButton("Iniciar");
         frame.add(botonIniciar, gbc);
 
-        //frame.pack();
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        
+        frame.add(mensaje, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        botonEnviarMensaje.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String mensajeEnviar = mensaje.getText();
+                chat.setText(chat.getText() + "\n" + "Jugador " + turno + ": " +  mensajeEnviar);
+                mensaje.setText("");
+            }
+        });
+        frame.add(botonEnviarMensaje, gbc);
+
         frame.setVisible(true);
     }
 
