@@ -26,6 +26,8 @@ public class Jugador {
     ArrayList<Mina> listaMinas = new ArrayList<Mina>();
     Entidad[][] matriz = new Entidad[20][20];
 
+    int[][] matrizAtaques = new int[20][20];
+
     JButton[][] matrizBotones = new JButton[20][20];
 
     Jugador(int numero){

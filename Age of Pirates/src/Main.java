@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.*;
 
 public class Main {
     boolean hecho = false;
@@ -34,15 +35,19 @@ public class Main {
 
     JButton botonEnviarMensaje = new JButton("Enviar mensaje");
 
+    JButton botonDisparar = new JButton("Disparar");
+
     JTextArea chat = new JTextArea();
     JTextArea mensaje = new JTextArea();
 
     Entidad componenteSeleccionado = null;
+    
 
     int cantidadComponenteSeleccionado = 5;
 
+    Arma armaSeleccionada = null;
 
-
+    int cantidadDisparos = 0;
 
 
     int turno = 1;
@@ -162,6 +167,17 @@ public class Main {
         JButton botonIniciar = new JButton("Iniciar");
         frame.add(botonIniciar, gbc);
 
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+
+        botonDisparar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                seleccionarArma();
+            }
+        });
+        frame.add(botonDisparar, gbc);
+
         gbc.gridx = 0;
         gbc.gridy = 5;
         
@@ -182,27 +198,115 @@ public class Main {
         frame.setVisible(true);
     }
 
+    public void seleccionarArma(){
+        JFrame seleccionArma = new JFrame();
+        seleccionArma.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        seleccionArma.setSize(300, 300);
+        seleccionArma.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton cannonNormal = new JButton("Cañón");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        seleccionArma.add(cannonNormal, gbc);
+
+        cannonNormal.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                armaSeleccionada = new Canon();
+                System.out.println("Cañon");
+                seleccionArma.dispose();
+                JOptionPane.showMessageDialog(null, "Seleccione la casille donde quiera disparar el cañon en el mapa");
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        JButton canonMultiple = new JButton("Cañón multiple");
+        seleccionArma.add(canonMultiple, gbc);
+
+        canonMultiple.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                armaSeleccionada = new CanonM();
+                System.out.println("Cañon multiple");
+                seleccionArma.dispose();
+                JOptionPane.showMessageDialog(null, "Seleccione la casille donde quiera disparar el cañon multiple en el mapa");
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        JButton canonBarbaRoja = new JButton("Cañón Barba Roja");
+        seleccionArma.add(canonBarbaRoja, gbc);
+
+        canonBarbaRoja.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                armaSeleccionada = new CanonBR();
+                System.out.println("Cañon Barba Roja");
+                seleccionArma.dispose();
+                JOptionPane.showMessageDialog(null, "Seleccione las 10 casille donde quiera disparar el cañon barba roja en el mapa");
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+
+        JButton bomba = new JButton("Bomba");
+        seleccionArma.add(bomba, gbc);
+
+        bomba.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                armaSeleccionada = new Bomba();
+                System.out.println("Bomba");
+                seleccionArma.dispose();
+                JOptionPane.showMessageDialog(null, "Coloque 3 cartuchos de dinamita en el mapa");
+            }
+        });
+
+
+        seleccionArma.setVisible(true);
+    }
+
     public void cambiarTurno(){
         if(turno == 1){
             //panelIzq.removeAll();
             dibujarMatrizJ(jugador2.matriz, panelIzq, jugador2.matrizBotones, jugador2);
             turno = 2;
+            dibujarMatrizE(jugador3.matriz, panelDer, jugador3.matrizBotones, jugador3);
 
         }
         else if(turno == 2){
             //panelIzq.removeAll();
             dibujarMatrizJ(jugador3.matriz, panelIzq, jugador3.matrizBotones, jugador3);
             turno = 3;
+            dibujarMatrizE(jugador4.matriz, panelDer, jugador4.matrizBotones, jugador4);
         }
         else if(turno == 3){
             //panelIzq.removeAll();
             dibujarMatrizJ(jugador4.matriz, panelIzq, jugador4.matrizBotones, jugador4);
             turno = 4;
+            dibujarMatrizE(jugador1.matriz, panelDer, jugador1.matrizBotones, jugador1);
         }
         else if(turno == 4){
             //panelIzq.removeAll();
             dibujarMatrizJ(jugador1.matriz, panelIzq, jugador1.matrizBotones, jugador1);
             turno = 1;
+            dibujarMatrizE(jugador2.matriz, panelDer, jugador2.matrizBotones, jugador2);
         }
         System.out.println("Turno: " + turno);
     }
@@ -355,6 +459,14 @@ public class Main {
                         matrizBotones[r][c].setBackground(Color.RED);
                     }
                 }
+                else {
+                    if (jugador.matrizAtaques[r][c] == 2 && matriz[r][c].atacado) {
+                        matrizBotones[r][c].setBackground(Color.GREEN);
+                    }
+                    else{
+                        matrizBotones[r][c].setBackground(Color.WHITE);
+                    }
+                }
 
                 panelMatriz.add(matrizBotones[r][c]);
                 int finalR = r;
@@ -362,8 +474,56 @@ public class Main {
                 matrizBotones[r][c].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        matrizBotones[finalR][finalC].setBackground(Color.RED);
+                        if (armaSeleccionada == null) {
+                            JOptionPane.showMessageDialog(null, "No hay arma seleccionada");
+                            return;
+                        }
+
+                        if (matriz[finalR][finalC] instanceof EntidadVacia){
+                            matrizBotones[finalR][finalC].setBackground(Color.RED);
+                            jugador.matrizAtaques[finalR][finalC] = 1;
+                        }
+                        else{
+                            matrizBotones[finalR][finalC].setBackground(Color.GREEN);
+                            jugador.matrizAtaques[finalR][finalC] = 2;
+                            if(armaSeleccionada instanceof CanonM){
+                                System.out.println("xd");
+                                Random randomR = new Random();
+                                Random randomC = new Random();
+                                int contador = 0;
+                                while (contador < 3) {
+                                    int enteroRandomR = randomR.nextInt(20);
+                                    int enteroRandomC = randomC.nextInt(20);
+                                    if (matriz[enteroRandomR][enteroRandomC] instanceof EntidadVacia) {
+                                        matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.RED);
+                                        jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 1;
+                                        contador++;
+                                        
+                                    }
+                                    else{
+                                        matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.GREEN);
+                                        jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 2;
+                                    }
+
+                                    matriz[enteroRandomR][enteroRandomC].atacado = true;
+                                }
+                                cantidadDisparos = 0;
+                                JOptionPane.showMessageDialog(null, "Se han completado los disparos");
+                                cambiarTurno();
+                                return;
+                            }
+                        }
                         matriz[finalR][finalC].atacado=true;
+
+                        cantidadDisparos++;
+
+                        if(cantidadDisparos == armaSeleccionada.disparos){
+                            JOptionPane.showMessageDialog(null, "Se han completado los disparos");
+                            armaSeleccionada = null;
+                            cambiarTurno();
+                            cantidadDisparos = 0;
+                            return;
+                        }
 
                     }
                 });
