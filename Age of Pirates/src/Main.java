@@ -4,14 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class Main {
     boolean hecho = false;
 
-    Jugador jugador1 = new Jugador();
-    Jugador jugador2 = new Jugador();
-    Jugador jugador3 = new Jugador();
-    Jugador jugador4 = new Jugador();
+    Jugador jugador1 = new Jugador(1);
+    Jugador jugador2 = new Jugador(2);
+    Jugador jugador3 = new Jugador(3);
+    Jugador jugador4 = new Jugador(4);
 
 
     JFrame frame = new JFrame("Age of Pirates");
@@ -57,6 +58,7 @@ public class Main {
         panelDer.setPreferredSize(minSize);
 
         dibujarMatrizJ(jugador1.matriz, panelIzq, jugador1.matrizBotones, jugador1);
+        dibujarMatrizE(jugador2.matriz, panelDer, jugador2.matrizBotones, jugador2);
         //dibujarMatrizJ(matriz2, panelDer, matrizBotones2, jugador2);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -117,6 +119,34 @@ public class Main {
             }
         });
 
+        p1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                botonesJugadores(jugador1);
+            }
+        });
+
+        p2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                botonesJugadores(jugador2);
+            }
+        });
+
+        p3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                botonesJugadores(jugador3);
+            }
+        });
+
+        p4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                botonesJugadores(jugador4);
+            }
+        });
+
         siguienteTurno.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -157,16 +187,20 @@ public class Main {
         }
         System.out.println("Turno: " + turno);
     }
+    public void botonesJugadores(Jugador jugador){
+        if(turno==jugador.numero){
+            JOptionPane.showMessageDialog(null, "Jugador invalido, es tu turno");
+            return;
+        }
+        dibujarMatrizE(jugador.matriz, panelDer, jugador.matrizBotones, jugador);
+    }
 
     public void dibujarMatrizJ(Entidad[][] matriz, JPanel panelMatriz, JButton[][] matrizBotones,Jugador jugador) {
         panelMatriz.removeAll();
         for (int r = 0; r < 20; r++) {
             for (int c = 0; c < 20; c++) {
                 matrizBotones[r][c] = new JButton();
-                if(matrizBotones[r][c].getActionListeners().length >0){
-                    //matrizBotones[r][c].removeActionListener(matrizBotones[r][c].getActionListeners()[0]);
-                }
-                if(matriz[r][c]== null) {
+                if(matriz[r][c]instanceof EntidadVacia) {
                     matrizBotones[r][c].setBackground(Color.WHITE);
                 }
                 else {
@@ -185,7 +219,7 @@ public class Main {
                     public void actionPerformed(ActionEvent e) {
 
                         if (componenteSeleccionado != null ) {
-                            if(matriz[finalR1][finalC1]== null){
+                            if(matriz[finalR1][finalC1]instanceof EntidadVacia){
                                 if(cantidadComponenteSeleccionado>0) {
 
                                     if (componenteSeleccionado instanceof Armeria) {
@@ -244,7 +278,6 @@ public class Main {
                         }
                         else{
                             JOptionPane.showMessageDialog(null, "No hay componente seleccionado");
-                            //System.out.println(matrizBotones[finalR][finalC].getBackground());
                         }
 
                     }
@@ -259,71 +292,41 @@ public class Main {
         //System.out.println("Turno: " + turno);
     }
 
-    // public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
-    //     int matrizAncho = matriz.length;
-    //     int matrizAlto = matriz[0].length;
 
-    //     // Verificar si el objeto se sale de los límites de la matriz
-    //     if (x + objeto.ancho > matrizAncho || y + objeto.alto > matrizAlto) {
-    //         // Calcular la nueva posición dentro de la matriz
-    //         x = Math.min(x, matrizAncho - objeto.ancho);
-    //         y = Math.min(y, matrizAlto - objeto.alto);
-    //     }
+    public void dibujarMatrizE(Entidad[][] matriz, JPanel panelMatriz, JButton[][] matrizBotones,Jugador jugador) {
+        panelMatriz.removeAll();
+        for (int r = 0; r < 20; r++) {
+            for (int c = 0; c < 20; c++) {
+                matrizBotones[r][c] = new JButton();
 
-    //     // Verificar si hay algún otro objeto en el espacio de la matriz
-    //     for (int i = x; i < x + objeto.ancho; i++) {
-    //         for (int j = y; j < y + objeto.alto; j++) {
-    //             if (matriz[i][j] != null) {
-    //                 // Si ya hay un objeto en esta posición, puedes manejarlo según tus necesidades
-    //                 // Puedes lanzar una excepción, ignorar la colocación del objeto o realizar cualquier otra acción
-    //                 // Aquí se muestra un ejemplo de lanzar una excepción:
-    //                 JOptionPane.showMessageDialog(null, "Ya hay un objeto en la posición (" + i + ", " + j + ")");
-    //                 return;
-    //             }
-    //         }
-    //     }
+                if(matriz[r][c]instanceof EntidadVacia) {
+                    if(!matriz[r][c].atacado) {
+                        matrizBotones[r][c].setBackground(Color.WHITE);
+                    }
+                    else {
+                        matrizBotones[r][c].setBackground(Color.RED);
+                    }
+                }
 
-    //     // Colocar el objeto en la matriz
-    //     for (int i = x; i < x + objeto.ancho; i++) {
-    //         for (int j = y; j < y + objeto.alto; j++) {
-    //             matriz[i][j] = objeto;
-    //             matrizBotones[i][j].setBackground(objeto.color);
-    //         }
-    //     }
-    // }
+                panelMatriz.add(matrizBotones[r][c]);
+                int finalR = r;
+                int finalC = c;
+                matrizBotones[r][c].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        matrizBotones[finalR][finalC].setBackground(Color.RED);
+                        matriz[finalR][finalC].atacado=true;
 
+                    }
+                });
+            }
 
-//     public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
-//     int matrizAncho = matriz.length;
-//     int matrizAlto = matriz[0].length;
+        }
+        panelMatriz.repaint();
+        panelMatriz.revalidate();
+    }
 
-//     // Verificar si el objeto se sale de los límites de la matriz
-//     if (x + objeto.ancho > matrizAncho || y + objeto.alto > matrizAlto) {
-//         // Calcular la nueva posición dentro de la matriz
-//         x = Math.min(x, matrizAncho - objeto.ancho);
-//         y = Math.min(y, matrizAlto - objeto.alto);
-//     }
-
-//     // Buscar la primera posición disponible para colocar el objeto
-//     boolean objetoColocado = false;
-//     for (int i = x; i <= matrizAncho - objeto.ancho && !objetoColocado; i++) {
-//         for (int j = y; j <= matrizAlto - objeto.alto && !objetoColocado; j++) {
-//             boolean hayColision = verificarColision(objeto, i, j, matriz);
-//             if (!hayColision) {
-//                 // Colocar el objeto en la posición encontrada
-//                 colocarObjetoEnPosicion(objeto, i, j, matriz, matrizBotones);
-//                 objetoColocado = true;
-//             }
-//         }
-//     }
-
-//     // Si no se pudo colocar el objeto, mostrar un mensaje de error
-//     if (!objetoColocado) {
-//         JOptionPane.showMessageDialog(null, "No hay espacio suficiente para colocar el objeto.");
-//     }
-// }
-
-    public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
+    public void colocarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador) {
         int matrizAncho = matriz.length;
         int matrizAlto = matriz[0].length;
 
@@ -341,7 +344,7 @@ public class Main {
                 boolean hayColision = verificarColision(objeto, i, j, matriz);
                 if (!hayColision && (i == x || j == y)) {
                     // Colocar el objeto en la posición encontrada
-                    colocarObjetoEnPosicion(objeto, i, j, matriz, matrizBotones);
+                    colocarObjetoEnPosicion(objeto, i, j, matriz, matrizBotones,jugador);
                     objetoColocado = true;
                 }
             }
@@ -356,23 +359,67 @@ public class Main {
     private boolean verificarColision(Entidad objeto, int x, int y, Entidad[][] matriz) {
         for (int i = x; i < x + objeto.ancho; i++) {
             for (int j = y; j < y + objeto.alto; j++) {
-                if (matriz[i][j] != null) {
-                    return true; // Hay un objeto en esta posición, hay colisión
+                if (matriz[i][j] instanceof EntidadVacia) {
+                     // Hay un objeto en esta posición, hay colisión
+                }
+                else{
+                    return true;
                 }
             }
         }
-        return false; // No hay colisión
+        return false;
+        //return false; // No hay colisión
     }
 
-    private void colocarObjetoEnPosicion(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones) {
+    private void colocarObjetoEnPosicion(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador) {
         for (int i = x; i < x + objeto.ancho; i++) {
             for (int j = y; j < y + objeto.alto; j++) {
+                matriz[i][j] = null;
                 matriz[i][j] = objeto;
+                jugador.grafo.agregarVertice(objeto);
                 matrizBotones[i][j].setBackground(objeto.color);
+                if(objeto instanceof Conector){
+                    searchAround(matriz,i,j,jugador);
+                }
             }
         }
     }
 
+    public static void searchAround(Entidad[][] matrix, int targetRow, int targetCol,Jugador jugador) {
+        int numRows = matrix.length;
+        int numCols = matrix[0].length;
+
+        int radius = 5;
+        ArrayList<Vertice> entidadesCerca = new ArrayList<>();
+
+        for (int i = targetRow - radius; i <= targetRow + radius; i++) {
+            for (int j = targetCol - radius; j <= targetCol + radius; j++) {
+                if (isValidPosition(i, j, numRows, numCols)) {
+                    if (matrix[i][j] instanceof EntidadVacia || matrix[i][j] instanceof Conector) {
+
+                    }
+                    else{
+                        System.out.println("Objeto encontrado en la posición [" + i + ", " + j + "]");
+                        Vertice vertice = new Vertice(matrix[i][j]);
+                        entidadesCerca.add(vertice);
+                    }
+
+                }
+            }
+        }
+        for (Vertice vertice:entidadesCerca) {
+            for(Vertice verticeT:entidadesCerca){
+                if(vertice!=verticeT && vertice.dato.getClass()!=verticeT.dato.getClass()){
+                    jugador.grafo.agregarArista(jugador.grafo.buscarVertice(vertice.dato),jugador.grafo.buscarVertice(verticeT.dato));
+                }
+            }
+        }
+        jugador.grafo.imprimir();
+    }
+
+    public static boolean isValidPosition(int row, int col, int numRows, int numCols) {
+        return row >= 0 && row < numRows && col >= 0 && col < numCols;
+    }
 
     public void generarFrameComponentes(){
         if(!hecho){
@@ -487,7 +534,7 @@ public class Main {
     public void componentSelect(Entidad componente, int finalR, int finalC, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador){
         if (componente instanceof Armeria) {
             if(jugador.cantidadArmerias > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones, jugador);
                 jugador.cantidadArmerias--;
             }
             else {
@@ -495,7 +542,7 @@ public class Main {
             }
         } else if (componente instanceof Mina) {
             if(jugador.cantidadMinas > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones, jugador);
                 jugador.cantidadMinas--;
             }
             else {
@@ -504,7 +551,7 @@ public class Main {
 
         } else if (componente instanceof Templo) {
             if(jugador.cantidadTemplos > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadTemplos--;
             }
             else {
@@ -513,7 +560,7 @@ public class Main {
 
         } else if (componente instanceof Canon) {
             if(jugador.cantidadCanon > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadCanon--;
             }
             else {
@@ -522,7 +569,7 @@ public class Main {
 
         } else if (componente instanceof CanonBR) {
             if(jugador.cantidadCanonBR > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadCanonBR--;
             }
             else {
@@ -530,7 +577,7 @@ public class Main {
             }
         } else if (componente instanceof CanonM) {
             if(jugador.cantidadCanonM > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadCanonM--;
             }
             else {
@@ -538,7 +585,7 @@ public class Main {
             }
         } else if (componente instanceof Bomba) {
             if(jugador.cantidadBombas > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadBombas--;
             }
             else {
@@ -546,7 +593,7 @@ public class Main {
             }
         } else if (componente instanceof Conector) {
             if(jugador.cantidadConectores > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadConectores--;
             }
             else {
@@ -554,7 +601,7 @@ public class Main {
             }
         } else if (componente instanceof Barco) {
             if(jugador.cantidadBarcos > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadBarcos--;
             }
             else {
@@ -562,7 +609,7 @@ public class Main {
             }
         } else if (componente instanceof Mercado) {
             if(jugador.cantidadMercados > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadMercados--;
             }
             else {
@@ -570,7 +617,7 @@ public class Main {
             }
         } else if (componente instanceof FuenteDeEnergia) {
             if(jugador.cantidadFuentes > 0){
-                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones);
+                colocarObjeto(componente, finalR, finalC, matriz, matrizBotones,jugador);
                 jugador.cantidadFuentes--;
             }
             else {

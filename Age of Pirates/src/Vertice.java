@@ -44,6 +44,7 @@ public class Vertice {
         // si no está la arista para no repetir
         if (buscarArista(arista) == -1)
             aristas.add(new Vertice(arista.dato));
+        //System.out.println("Agregando arista");
     }
     
     // public void agregarArista (Vertice arista, int peso)

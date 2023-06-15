@@ -23,6 +23,10 @@ public class Grafo {
     {
         vertices.add(new Vertice(valor));
     }
+    public void agregarVertice(Vertice vertice)
+    {
+        vertices.add(vertice);
+    }
 
     // agrega las aristas
     public void agregarArista(Vertice origen, Vertice destino)
@@ -55,8 +59,11 @@ public class Grafo {
         for (int i = 0; i < vertices.size(); i++)
         {
             System.out.print("Vertice "+vertices.get(i).dato.toString()+":  ");
+            if (vertices.get(i).aristas.size() == 0)
+                System.out.print("No tiene aristas");
             for (int j = 0; j < vertices.get(i).aristas.size(); j++) {
-                System.out.print(vertices.get(i).aristas.get(j).dato +"  ");
+                System.out.print(vertices.get(i).aristas.get(j).dato.toString() +"  ");
+                //System.out.println("Imprimi");
             }
             System.out.println("");
         }
