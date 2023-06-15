@@ -540,7 +540,24 @@ public class Main {
                                 
                                 matriz[finalR][finalC].vida -= 1;
                                 if (matriz[finalR][finalC].vida == 0) {
-                                    System.out.println("SE MUREEERE");
+                                    matriz[finalR][finalC].destruido=true;
+                                    borrarObjeto(matriz[finalR][finalC], finalR, finalC, matriz, matrizBotones,jugador);
+                                    for(int i = 0; i < 20; i++){
+                                        for(int j = 0; j < 20; j++){
+                                            if(jugador.matrizAtaques[i][j] == 2){
+                                                matrizBotones[i][j].setBackground(Color.GREEN);
+                                            }
+                                            else if(jugador.matrizAtaques[i][j] == 1){
+                                                matrizBotones[i][j].setBackground(Color.RED);
+                                            }
+                                            else{
+                                                matrizBotones[i][j].setBackground(Color.WHITE);
+                                            }
+                                        }
+                                    }
+                                    JOptionPane.showMessageDialog(null, "Se ha destruido el objeto");
+                                    cambiarTurno();
+                                    return;
                                 }
                                 cambiarTurno();
                                 return;
@@ -563,6 +580,7 @@ public class Main {
                                     }
                                 }
                                 JOptionPane.showMessageDialog(null, "Se ha destruido el objeto");
+                                cambiarTurno();
                                 return;
                             }
                         }
