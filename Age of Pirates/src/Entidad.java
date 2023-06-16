@@ -17,5 +17,7 @@ public class Entidad {
 
     boolean destruido;
 
+    boolean mostrarEnemigo;
+
     Color color;
 }

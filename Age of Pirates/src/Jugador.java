@@ -26,6 +26,12 @@ public class Jugador {
     int acero = 550;
     int numero = 0;
 
+    boolean fuenteDestruida;
+
+    boolean inicio;
+
+    boolean perdio;
+
 
     Entidad[][] matriz = new Entidad[20][20];
 
@@ -35,6 +41,7 @@ public class Jugador {
 
     Jugador(int numero){
         this.numero = numero;
+        this.perdio = false;
         for(int i = 0; i < 20; i++){
             for(int j = 0; j < 20; j++){
                 matriz[i][j] = new EntidadVacia();

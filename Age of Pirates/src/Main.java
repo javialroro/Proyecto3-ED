@@ -65,7 +65,7 @@ public class Main {
         panelDer.setPreferredSize(minSize);
 
         dibujarMatrizJ(jugador1.matriz, panelIzq, jugador1.matrizBotones, jugador1);
-        dibujarMatrizE(jugador2.matriz, panelDer, jugador2.matrizBotones, jugador2);
+        //dibujarMatrizE(jugador2.matriz, panelDer, jugador2.matrizBotones, jugador2);
         //dibujarMatrizJ(matriz2, panelDer, matrizBotones2, jugador2);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -80,6 +80,7 @@ public class Main {
         gbc.gridx = 1;
         gbc.weightx = 0.4; // Ajusta el peso para reducir el tamaño
         frame.add(panelDer, gbc);
+        botonDisparar.setEnabled(false);
 
         chat.setEditable(false);
         chat.setWrapStyleWord(true);
@@ -164,6 +165,12 @@ public class Main {
         gbc.gridx = 0;
         gbc.gridy = 4;
         JButton botonIniciar = new JButton("Iniciar");
+        botonIniciar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                iniciar();
+            }
+        });
         frame.add(botonIniciar, gbc);
 
         gbc.gridx = 1;
@@ -330,31 +337,47 @@ public class Main {
         seleccionArma.setVisible(true);
     }
 
+    public void iniciar(){
+        if(turno==1){
+        jugador1.inicio = true;
+        }
+        else if(turno==2){
+            jugador2.inicio = true;
+        }
+        else if(turno==3){
+            jugador3.inicio = true;
+        }
+        else if(turno==4){
+            jugador4.inicio = true;
+        }
+
+    }
+
     public void cambiarTurno(){
-        if(turno == 1){
-            //panelIzq.removeAll();
+        if(jugador1.inicio && jugador2.inicio && jugador3.inicio && jugador4.inicio){
+            botonDisparar.setEnabled(true);
+        }
+        if(turno == 1 && !jugador2.perdio){
             dibujarMatrizJ(jugador2.matriz, panelIzq, jugador2.matrizBotones, jugador2);
-            turno = 2;
-            dibujarMatrizE(jugador3.matriz, panelDer, jugador3.matrizBotones, jugador3);
+            //dibujarMatrizE(jugador3.matriz, panelDer, jugador3.matrizBotones, jugador3);
 
         }
-        else if(turno == 2){
-            //panelIzq.removeAll();
+        else if(turno == 2 && !jugador3.perdio){
             dibujarMatrizJ(jugador3.matriz, panelIzq, jugador3.matrizBotones, jugador3);
-            turno = 3;
-            dibujarMatrizE(jugador4.matriz, panelDer, jugador4.matrizBotones, jugador4);
+            //dibujarMatrizE(jugador4.matriz, panelDer, jugador4.matrizBotones, jugador4);
         }
-        else if(turno == 3){
-            //panelIzq.removeAll();
+        else if(turno == 3 && !jugador4.perdio){
             dibujarMatrizJ(jugador4.matriz, panelIzq, jugador4.matrizBotones, jugador4);
-            turno = 4;
-            dibujarMatrizE(jugador1.matriz, panelDer, jugador1.matrizBotones, jugador1);
+            //dibujarMatrizE(jugador1.matriz, panelDer, jugador1.matrizBotones, jugador1);
         }
-        else if(turno == 4){
-            //panelIzq.removeAll();
+        else if(turno == 4 && !jugador1.perdio){
+
             dibujarMatrizJ(jugador1.matriz, panelIzq, jugador1.matrizBotones, jugador1);
+            //dibujarMatrizE(jugador2.matriz, panelDer, jugador2.matrizBotones, jugador2);
+        }
+        turno++;
+        if(turno>4){
             turno = 1;
-            dibujarMatrizE(jugador2.matriz, panelDer, jugador2.matrizBotones, jugador2);
         }
         System.out.println("Turno: " + turno);
     }
@@ -536,16 +559,10 @@ public class Main {
             for (int c = 0; c < 20; c++) {
                 matrizBotones[r][c] = new JButton();
 
-                // if(matriz[r][c]instanceof EntidadVacia) {
-                //     if(!matriz[r][c].atacado) {
-                //         matrizBotones[r][c].setBackground(Color.WHITE);
-                //     }
-                //     else {
-                //         matrizBotones[r][c].setBackground(Color.RED);
-                //     }
-                // }
-                //else {
-                if (jugador.matrizAtaques[r][c] == 2 ) {
+                if(matriz[r][c].mostrarEnemigo || jugador.fuenteDestruida){
+                    matrizBotones[r][c].setBackground(matriz[r][c].color);
+                }
+                else if (jugador.matrizAtaques[r][c] == 2 ) {
                     matrizBotones[r][c].setBackground(Color.GREEN);
                 }
                 else if(jugador.matrizAtaques[r][c] == 1){
@@ -600,6 +617,7 @@ public class Main {
                                 jugador.matrizAtaques[finalR][finalC] = 1;
                                 chat.setText(chat.getText() + "\n" + "Ataque a " + jugador.numero + " fallido en la posición " + "(" + finalR + ", " + finalC + ")" );
                             } else {
+                                System.out.println(matriz[finalR][finalC].getClass().getSimpleName());
                                 matrizBotones[finalR][finalC].setBackground(Color.GREEN);
                                 jugador.matrizAtaques[finalR][finalC] = 2;
                                 chat.setText(chat.getText() + "\n" + "Ataque a " + jugador.numero + " exitoso en la posición " + "(" + finalR + ", " + finalC + ")" );
@@ -698,15 +716,44 @@ public class Main {
     }
 
     public void borrarObjeto(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador){
+        boolean flag  = false;
         for(int i = 0; i < 20; i++){
             for(int j = 0; j < 20; j++){
+
                 if(matriz[i][j].destruido){
                     if(matriz[i][j] instanceof Conector) {
                         searchAround(matriz,i,j,jugador,0);
                     }
+                    else if(matriz[i][j] instanceof FuenteDeEnergia){
+                        jugador.fuenteDestruida = true;
+                        System.out.println("Fuente destruida");
+                    }
                     matriz[i][j] = new EntidadVacia();
+
+                }
+                if(!(matriz[i][j] instanceof EntidadVacia)){
+                    flag = true;
                 }
             }
+        }
+        if(!flag){
+            JOptionPane.showMessageDialog(null, "El jugador " + jugador.numero + " ha perdido");
+            jugador.perdio = true;
+            if(jugador.numero == 1){
+                p1.setEnabled(false);
+            }
+            else if(jugador.numero == 2){
+                p2.setEnabled(false);
+            }
+            else if(jugador.numero == 3){
+                p3.setEnabled(false);
+            }
+            else if(jugador.numero == 4){
+                p4.setEnabled(false);
+            }
+            panelDer.removeAll();
+            panelDer.repaint();
+            panelDer.revalidate();
         }
     }
 
@@ -791,6 +838,7 @@ public class Main {
                         }
                         else{
                             matrix[i][j].tieneEnergia = false;
+                            matrix[i][j].mostrarEnemigo = true;
                         }
 
                     }
@@ -802,11 +850,10 @@ public class Main {
             for(Vertice verticeT:entidadesCerca){
                 if(vertice!=verticeT && vertice.dato.getClass()!=verticeT.dato.getClass()){
                     if(accion == 1){
-                    jugador.grafo.agregarArista(jugador.grafo.buscarVertice(vertice.dato),jugador.grafo.buscarVertice(verticeT.dato));
+                        jugador.grafo.agregarArista(jugador.grafo.buscarVertice(vertice.dato),jugador.grafo.buscarVertice(verticeT.dato));
                     }
                     else{
                         jugador.grafo.eliminarArista(jugador.grafo.buscarVertice(vertice.dato),jugador.grafo.buscarVertice(verticeT.dato));
-                        //System.out.println("Eliminando arista entre "+vertice.dato.getClass()+" y "+verticeT.dato.getClass());
                     }
                 }
             }
