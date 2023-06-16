@@ -12,10 +12,10 @@ public class Jugador {
     int cantidadConectores = 5;
     int cantidadBarcos = 0;
 
-    int cantidadBombas = 0;
+    int cantidadBombas = 1;
     int cantidadCanon = 1;
-    int cantidadCanonBR = 0;
-    int cantidadCanonM = 0;
+    int cantidadCanonBR = 1;
+    int cantidadCanonM = 1;
 
     int cantidadMinas = 2;
     int cantidadTemplos = 4;

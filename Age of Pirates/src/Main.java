@@ -566,15 +566,18 @@ public class Main {
                             else if (matriz[finalR][finalC] instanceof EntidadVacia) {
                                 matrizBotones[finalR][finalC].setBackground(Color.RED);
                                 jugador.matrizAtaques[finalR][finalC] = 1;
+                                chat.setText(chat.getText() + "\n" + "Ataque a " + jugador.numero + " fallido en la posición " + "(" + finalR + ", " + finalC + ")" );
                             } else {
                                 matrizBotones[finalR][finalC].setBackground(Color.GREEN);
                                 jugador.matrizAtaques[finalR][finalC] = 2;
+                                chat.setText(chat.getText() + "\n" + "Ataque a " + jugador.numero + " exitoso en la posición " + "(" + finalR + ", " + finalC + ")" );
 
                                 if (armaSeleccionada instanceof CanonM) {
                                     System.out.println("xd");
                                     Random randomR = new Random();
                                     Random randomC = new Random();
                                     int contador = 0;
+                                    chat.setText(chat.getText() + "\n" + "Cañon multiple en: ");
                                     while (contador < 3) {
                                         int enteroRandomR = randomR.nextInt(20);
                                         int enteroRandomC = randomC.nextInt(20);
@@ -582,10 +585,14 @@ public class Main {
                                             matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.RED);
                                             jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 1;
                                             contador++;
+                                            chat.setText(chat.getText() + "\n" + "Fallido en la posición " + "(" + enteroRandomR + ", " + enteroRandomC + ")" );
 
                                         } else {
                                             matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.GREEN);
                                             jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 2;
+                                            contador++;
+                                            chat.setText(chat.getText() + "\n" + "Exitoso en la posición " + "(" + enteroRandomR + ", " + enteroRandomC + ")" );
+
                                         }
 
                                         matriz[enteroRandomR][enteroRandomC].atacado = true;
