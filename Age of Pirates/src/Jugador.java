@@ -12,18 +12,17 @@ public class Jugador {
     int cantidadConectores = 5;
     int cantidadBarcos = 0;
 
-    int cantidadBombas = 1;
-    int cantidadCanon = 1;
-    int cantidadCanonBR = 1;
-    int cantidadCanonM = 1;
+    int cantidadBombas = 0;
+    int cantidadCanon = 0;
+    int cantidadCanonBR = 0;
+    int cantidadCanonM = 0;
 
-    int cantidadMinas = 2;
-    int cantidadTemplos = 4;
-    int cantidadArmerias = 5;
+    int cantidadMinas = 0;
+    int cantidadTemplos = 0;
+    int cantidadArmerias = 0;
+    int dinero = 4000;
 
-    int dinero = 100000;
-
-    int acero = 550;
+    int acero = 500;
     int numero = 0;
 
     boolean fuenteDestruida;

@@ -941,13 +941,14 @@ public class Main {
 
 
     public void generarFrameMercado(Jugador j) {
-        JFrame Mercado = new JFrame();
+        JFrame Mercado = new JFrame("Mercado");
         Mercado.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        Mercado.setSize(300, 300);
+        Mercado.setSize(400, 400);
         Mercado.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        JButton boton1 = new JButton("vender cañon (recibes 100 de oro)");
+        // Botón existente: vender cañón
+        JButton boton1 = new JButton("Vender cañón (recibes 100 de oro)");
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0.4;
@@ -957,161 +958,215 @@ public class Main {
         boton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.cantidadCanon>0){
-                    j.dinero+=100;
+                if (j.cantidadCanon > 0) {
+                    j.dinero += 100;
                     j.cantidadCanon--;
-                    JOptionPane.showMessageDialog(null, "Cañon Vendido");
-                }
-                else{
+                    JOptionPane.showMessageDialog(null, "Cañón Vendido");
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes cañones para vender");
-
                 }
-
             }
-
         });
 
-
-        JButton boton2 = new JButton("Vender cañon BR (recibes 200 de oro)");
+        // Botón existente: vender cañón BR
+        JButton boton2 = new JButton("Vender cañón BR (recibes 200 de oro)");
         gbc.gridy = 1;
         Mercado.add(boton2, gbc);
         boton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.cantidadCanonBR>0){
-                    j.dinero+=200;
+                if (j.cantidadCanonBR > 0) {
+                    j.dinero += 200;
                     j.cantidadCanonBR--;
-                    JOptionPane.showMessageDialog(null, "Cañon Barba Roja Vendido");
-                }
-                else{
+                    JOptionPane.showMessageDialog(null, "Cañón Barba Roja Vendido");
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes cañones para vender");
-
                 }
-
             }
-
         });
 
-
-        JButton boton3 = new JButton("Vender cañon M (recibe 150 de oro)");
+        // Botón existente: vender cañón M
+        JButton boton3 = new JButton("Vender cañón M (recibe 150 de oro)");
         gbc.gridy = 2;
         Mercado.add(boton3, gbc);
         boton3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.cantidadCanonM>0){
-                    j.dinero+=150;
+                if (j.cantidadCanonM > 0) {
+                    j.dinero += 150;
                     j.cantidadCanonM--;
-                    JOptionPane.showMessageDialog(null, "Cañon Multiple Vendido");
-                }
-                else{
+                    JOptionPane.showMessageDialog(null, "Cañón Múltiple Vendido");
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes cañones para vender");
-
                 }
             }
-
         });
 
-
-
-
-
-
+        // Botón existente: vender acero
         JButton boton7 = new JButton("Vender tu acero (recibes la cantidad de acero en oro)");
         gbc.gridy = 3;
         Mercado.add(boton7, gbc);
         boton7.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.acero>0){
-                    j.dinero+=j.acero;
-                    j.acero=0;
+                if (j.acero > 0) {
+                    j.dinero += j.acero;
+                    j.acero = 0;
                     JOptionPane.showMessageDialog(null, "Acero Vendido");
-                }
-                else{
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes acero para vender");
-
                 }
-
             }
-
         });
 
-        JButton boton4 = new JButton("Comprar cañon (100 de oro)");
+        // Botón nuevo: comprar armería cañón
+        JButton boton4 = new JButton("Comprar armería cañón (100 de oro)");
         gbc.gridx = 1;
         gbc.gridy = 0;
         Mercado.add(boton4, gbc);
         boton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.dinero>=100){
-                    j.dinero-=100;
-                    j.cantidadCanon++;
-                    JOptionPane.showMessageDialog(null, "Cañon Comprado");
-                }
-                else{
+                if (j.dinero >= 100) {
+                    j.dinero -= 100;
+                    j.cantidadArmerias++;
+                    // Lógica para comprar armería cañón
+                    JOptionPane.showMessageDialog(null, "Armería Cañón Comprada");
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
                 }
             }
-
         });
 
-        JButton boton5 = new JButton("Comprar cañon BR (200 de oro)");
+        // Botón nuevo: comprar mina
+        JButton boton5 = new JButton("Comprar mina (200 de oro)");
         gbc.gridy = 1;
         Mercado.add(boton5, gbc);
         boton5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.dinero>=200){
-                    j.dinero-=200;
-                    j.cantidadCanonBR++;
-                    JOptionPane.showMessageDialog(null, "Cañon Barba Roja Comprado");
-                }
-                else{
+                if (j.dinero >= 200) {
+                    j.dinero -= 200;
+                    j.cantidadMinas++;
+                    // Lógica para comprar mina
+                    JOptionPane.showMessageDialog(null, "Mina Comprada");
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
                 }
             }
-
         });
 
-        JButton boton6 = new JButton("Comprar cañon M (150 de oro)");
+        // Botón nuevo: comprar templo
+        JButton boton6 = new JButton("Comprar templo (150 de oro)");
         gbc.gridy = 2;
         Mercado.add(boton6, gbc);
         boton6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.dinero>=150){
-                    j.dinero-=150;
-                    j.cantidadCanon++;
-                    JOptionPane.showMessageDialog(null, "Cañon Multiple Comprado");
-                }
-                else{
+                if (j.dinero >= 150) {
+                    j.dinero -= 150;
+                    j.cantidadTemplos++;
+                    // Lógica para comprar templo
+                    JOptionPane.showMessageDialog(null, "Templo Comprado");
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
                 }
             }
-
         });
 
-        JButton boton8 = new JButton("Comprar 10 de acero (10 de oro)");
+        // Botón nuevo: comprar armería cañón múltiple
+        JButton boton9 = new JButton("Comprar armería cañón múltiple (250 de oro)");
         gbc.gridy = 3;
-        Mercado.add(boton8, gbc);
-        boton8.addActionListener(new ActionListener() {
+        Mercado.add(boton9, gbc);
+        boton9.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(j.dinero>=10){
-                    j.dinero-=10;
-                    j.acero+=10;
-                    JOptionPane.showMessageDialog(null, "Acero Comprado");
-                }
-                else{
+                if (j.dinero >= 250) {
+                    j.dinero -= 250;
+                    j.cantidadArmerias++;
+                    // Lógica para comprar armería cañón múltiple
+                    JOptionPane.showMessageDialog(null, "Armería Cañón Múltiple Comprada");
+                } else {
                     JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
                 }
             }
+        });
 
+        // Botón nuevo: comprar armería cañón Barba Roja
+        JButton boton10 = new JButton("Comprar armería cañón Barba Roja (300 de oro)");
+        gbc.gridy = 4;
+        Mercado.add(boton10, gbc);
+        boton10.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.dinero >= 300) {
+                    j.dinero -= 300;
+                    j.cantidadArmerias++;
+                    // Lógica para comprar armería cañón Barba Roja
+                    JOptionPane.showMessageDialog(null, "Armería Cañón Barba Roja Comprada");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
+        });
+
+        // Botón nuevo: comprar armería bomba
+        JButton boton11 = new JButton("Comprar armería bomba (200 de oro)");
+        gbc.gridy = 5;
+        Mercado.add(boton11, gbc);
+        boton11.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.dinero >= 200) {
+                    j.dinero -= 200;
+                    j.cantidadArmerias++;
+                    // Lógica para comprar armería bomba
+                    JOptionPane.showMessageDialog(null, "Armería Bomba Comprada");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
+        });
+
+        // Botón nuevo: comprar conector
+        JButton boton12 = new JButton("Comprar conector (50 de oro)");
+        gbc.gridy = 6;
+        Mercado.add(boton12, gbc);
+        boton12.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.dinero >= 50) {
+                    j.dinero -= 50;
+                    j.cantidadConectores++;
+                    // Lógica para comprar conector
+                    JOptionPane.showMessageDialog(null, "Conector Comprado");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
+        });
+
+        // Botón nuevo: comprar fuente de energía
+        JButton boton13 = new JButton("Comprar fuente de energía (100 de oro)");
+        gbc.gridy = 7;
+        Mercado.add(boton13, gbc);
+        boton13.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (j.dinero >= 100) {
+                    j.dinero -= 100;
+                    j.cantidadFuentes++;
+                    // Lógica para comprar fuente de energía
+                    JOptionPane.showMessageDialog(null, "Fuente de Energía Comprada");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No tienes suficiente oro");
+                }
+            }
         });
 
         Mercado.setVisible(true);
     }
+
 
     public void generarFrameArmeriaCañon(Jugador j){
         JFrame ArmeriaCañon = new JFrame();
