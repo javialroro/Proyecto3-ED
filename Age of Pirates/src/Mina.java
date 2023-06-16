@@ -5,6 +5,7 @@ public class Mina extends Fabrica{
     int aceroGenerado= 0;
     int y = 0;
 
+
     Mina(){
 
         super();

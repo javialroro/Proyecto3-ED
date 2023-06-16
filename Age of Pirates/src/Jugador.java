@@ -3,6 +3,9 @@ import java.util.ArrayList;
 
 public class Jugador {
     Grafo grafo = new Grafo();
+
+    int Ckraken = 0;
+    int aguantesEscudo = 0;
     int cantidadFuentes = 1;
     int cantidadMercados = 1;
 
@@ -23,7 +26,7 @@ public class Jugador {
     int acero = 550;
     int numero = 0;
 
-    ArrayList<Mina> listaMinas = new ArrayList<Mina>();
+
     Entidad[][] matriz = new Entidad[20][20];
 
     int[][] matrizAtaques = new int[20][20];

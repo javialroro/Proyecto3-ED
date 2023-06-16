@@ -288,6 +288,29 @@ public class Main {
             }
         });
 
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+
+        JButton kraken = new JButton("Kraken");
+        seleccionArma.add(kraken, gbc);
+
+        kraken.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                armaSeleccionada = new kraken();
+                System.out.println("Kraken");
+                seleccionArma.dispose();
+                j.Ckraken--;
+                JOptionPane.showMessageDialog(null, "Seleccione cualquier casilla para invocar al Kraken");
+            }
+        });
+
+        if(j.Ckraken == 0){
+            kraken.setEnabled(false);
+        }
 
         if(j.cantidadCanon == 0){
             cannonNormal.setEnabled(false);
@@ -393,7 +416,11 @@ public class Main {
                                         x.iniciarThread();
                                         }
                                     } else if (componenteSeleccionado instanceof Templo) {
-                                        componentSelect(new Templo(), finalR, finalC, matriz, matrizBotones,jugador);
+                                        if(jugador.cantidadTemplos > 0){
+                                            Templo x = new Templo();
+                                            componentSelect(x, finalR, finalC, matriz, matrizBotones,jugador);
+                                            x.iniciarThreadT();
+                                        }
                                     } else if (componenteSeleccionado instanceof Canon) {
                                         componentSelect(new Canon(), finalR, finalC, matriz, matrizBotones,jugador);
                                     } else if (componenteSeleccionado instanceof CanonBR) {
@@ -435,7 +462,8 @@ public class Main {
                                     generarFrameMina((Mina) matriz[finalR][finalC],jugador);
 
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.ORANGE) {
-                                    JOptionPane.showMessageDialog(null, "Templo");
+                                    generarFrameTemplo((Templo) matriz[finalR][finalC],jugador);
+
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.cyan) {
                                     generarFrameMercado(jugador);
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.pink) {
@@ -502,55 +530,102 @@ public class Main {
                 matrizBotones[r][c].addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (armaSeleccionada == null) {
-                            JOptionPane.showMessageDialog(null, "No hay arma seleccionada");
-                            return;
-                        }
+                        if (jugador.aguantesEscudo > 0) {
+                            JOptionPane.showMessageDialog(null, "el ataque no impactó, el jugador posee escudo");
+                            jugador.aguantesEscudo--;
 
-                        if (matriz[finalR][finalC] instanceof EntidadVacia){
-                            matrizBotones[finalR][finalC].setBackground(Color.RED);
-                            jugador.matrizAtaques[finalR][finalC] = 1;
-                        }
-                        else{
-                            matrizBotones[finalR][finalC].setBackground(Color.GREEN);
-                            jugador.matrizAtaques[finalR][finalC] = 2;
-                            if(armaSeleccionada instanceof CanonM){
-                                System.out.println("xd");
+                        } else {
+
+                            if (armaSeleccionada == null) {
+                                JOptionPane.showMessageDialog(null, "No hay arma seleccionada");
+                                return;
+                            }
+                            if(armaSeleccionada instanceof kraken){
+
                                 Random randomR = new Random();
                                 Random randomC = new Random();
-                                int contador = 0;
-                                while (contador < 3) {
+                                boolean xd = true;
+                                while (true) {
                                     int enteroRandomR = randomR.nextInt(20);
                                     int enteroRandomC = randomC.nextInt(20);
-                                    if (matriz[enteroRandomR][enteroRandomC] instanceof EntidadVacia) {
-                                        matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.RED);
-                                        jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 1;
-                                        contador++;
-                                        
+                                    System.out.println("r: " + enteroRandomR + " c: " + enteroRandomC);
+                                    if (!(matriz[enteroRandomR][enteroRandomC] instanceof EntidadVacia)) {
+                                        matriz[enteroRandomR][enteroRandomC].destruido = true;
+                                        borrarObjeto(matriz[enteroRandomR][enteroRandomC],enteroRandomR, enteroRandomC, matriz, matrizBotones ,jugador);
+                                        JOptionPane.showMessageDialog(null, "El kraken destruyó un componente enemigo");
+                                        String t = chat.getText()+ "\n" ;
+                                        chat.setText(t + "El kraken destruyó un componente del jugador " + jugador.numero);
+                                        armaSeleccionada = null;
+                                        return;
                                     }
-                                    else{
-                                        matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.GREEN);
-                                        jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 2;
-                                    }
+                                    cambiarTurno();
 
-                                    matriz[enteroRandomR][enteroRandomC].atacado = true;
+
                                 }
-                                cantidadDisparos = 0;
-                                JOptionPane.showMessageDialog(null, "Se han completado los disparos");
-                                
+                            }
+                            else if (matriz[finalR][finalC] instanceof EntidadVacia) {
+                                matrizBotones[finalR][finalC].setBackground(Color.RED);
+                                jugador.matrizAtaques[finalR][finalC] = 1;
+                            } else {
+                                matrizBotones[finalR][finalC].setBackground(Color.GREEN);
+                                jugador.matrizAtaques[finalR][finalC] = 2;
+
+                                if (armaSeleccionada instanceof CanonM) {
+                                    System.out.println("xd");
+                                    Random randomR = new Random();
+                                    Random randomC = new Random();
+                                    int contador = 0;
+                                    while (contador < 3) {
+                                        int enteroRandomR = randomR.nextInt(20);
+                                        int enteroRandomC = randomC.nextInt(20);
+                                        if (matriz[enteroRandomR][enteroRandomC] instanceof EntidadVacia) {
+                                            matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.RED);
+                                            jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 1;
+                                            contador++;
+
+                                        } else {
+                                            matrizBotones[enteroRandomR][enteroRandomC].setBackground(Color.GREEN);
+                                            jugador.matrizAtaques[enteroRandomR][enteroRandomC] = 2;
+                                        }
+
+                                        matriz[enteroRandomR][enteroRandomC].atacado = true;
+                                    }
+                                    cantidadDisparos = 0;
+                                    JOptionPane.showMessageDialog(null, "Se han completado los disparos");
+
+                                    matriz[finalR][finalC].vida -= 1;
+                                    if (matriz[finalR][finalC].vida == 0) {
+                                        matriz[finalR][finalC].destruido = true;
+                                        borrarObjeto(matriz[finalR][finalC], finalR, finalC, matriz, matrizBotones, jugador);
+                                        for (int i = 0; i < 20; i++) {
+                                            for (int j = 0; j < 20; j++) {
+                                                if (jugador.matrizAtaques[i][j] == 2) {
+                                                    matrizBotones[i][j].setBackground(Color.GREEN);
+                                                } else if (jugador.matrizAtaques[i][j] == 1) {
+                                                    matrizBotones[i][j].setBackground(Color.RED);
+                                                } else {
+                                                    matrizBotones[i][j].setBackground(Color.WHITE);
+                                                }
+                                            }
+                                        }
+                                        JOptionPane.showMessageDialog(null, "Se ha destruido el objeto");
+                                        cambiarTurno();
+                                        return;
+                                    }
+                                    cambiarTurno();
+                                    return;
+                                }
                                 matriz[finalR][finalC].vida -= 1;
                                 if (matriz[finalR][finalC].vida == 0) {
-                                    matriz[finalR][finalC].destruido=true;
-                                    borrarObjeto(matriz[finalR][finalC], finalR, finalC, matriz, matrizBotones,jugador);
-                                    for(int i = 0; i < 20; i++){
-                                        for(int j = 0; j < 20; j++){
-                                            if(jugador.matrizAtaques[i][j] == 2){
+                                    matriz[finalR][finalC].destruido = true;
+                                    borrarObjeto(matriz[finalR][finalC], finalR, finalC, matriz, matrizBotones, jugador);
+                                    for (int i = 0; i < 20; i++) {
+                                        for (int j = 0; j < 20; j++) {
+                                            if (jugador.matrizAtaques[i][j] == 2) {
                                                 matrizBotones[i][j].setBackground(Color.GREEN);
-                                            }
-                                            else if(jugador.matrizAtaques[i][j] == 1){
+                                            } else if (jugador.matrizAtaques[i][j] == 1) {
                                                 matrizBotones[i][j].setBackground(Color.RED);
-                                            }
-                                            else{
+                                            } else {
                                                 matrizBotones[i][j].setBackground(Color.WHITE);
                                             }
                                         }
@@ -559,48 +634,26 @@ public class Main {
                                     cambiarTurno();
                                     return;
                                 }
+                            }
+                            matriz[finalR][finalC].atacado = true;
+
+                            cantidadDisparos++;
+
+                            if (cantidadDisparos == armaSeleccionada.disparos) {
+                                JOptionPane.showMessageDialog(null, "Se han completado los disparos");
+                                armaSeleccionada = null;
                                 cambiarTurno();
+                                cantidadDisparos = 0;
                                 return;
                             }
-                            matriz[finalR][finalC].vida -= 1;
-                            if (matriz[finalR][finalC].vida == 0) {
-                                matriz[finalR][finalC].destruido=true;
-                                borrarObjeto(matriz[finalR][finalC], finalR, finalC, matriz, matrizBotones,jugador);
-                                for(int i = 0; i < 20; i++){
-                                    for(int j = 0; j < 20; j++){
-                                        if(jugador.matrizAtaques[i][j] == 2){
-                                            matrizBotones[i][j].setBackground(Color.GREEN);
-                                        }
-                                        else if(jugador.matrizAtaques[i][j] == 1){
-                                            matrizBotones[i][j].setBackground(Color.RED);
-                                        }
-                                        else{
-                                            matrizBotones[i][j].setBackground(Color.WHITE);
-                                        }
-                                    }
-                                }
-                                JOptionPane.showMessageDialog(null, "Se ha destruido el objeto");
-                                cambiarTurno();
-                                return;
-                            }
+
                         }
-                        matriz[finalR][finalC].atacado=true;
-
-                        cantidadDisparos++;
-
-                        if(cantidadDisparos == armaSeleccionada.disparos){
-                            JOptionPane.showMessageDialog(null, "Se han completado los disparos");
-                            armaSeleccionada = null;
-                            cambiarTurno();
-                            cantidadDisparos = 0;
-                            return;
-                        }
-
                     }
-                });
-            }
+                    });
+                }
 
         }
+
         panelMatriz.repaint();
         panelMatriz.revalidate();
     }
@@ -1090,7 +1143,57 @@ public class Main {
         ArmeriaBomba.setVisible(true);
 
     }
+    public void generarFrameTemplo(Templo t, Jugador j){
 
+        JFrame templo = new JFrame("Mina");
+        templo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        templo.setSize(300, 300);
+        templo.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JButton boton1 = new JButton("usar comodín");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.4;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        templo.add(boton1, gbc);
+
+        boton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(t.comodin == 1 && t.hecho == true){
+                    JOptionPane.showMessageDialog(null, "has usado el comodín escudo");
+                    t.uso = 1;
+                    t.hecho = false;
+                    j.aguantesEscudo = 3;
+                    String t = chat.getText()+ "\n" ;
+                    chat.setText(t + " el jugador " + j.numero + " activó un escudo" + "\n");
+
+
+                }
+                else if(t.comodin == 2  && t.hecho == true){
+                    JOptionPane.showMessageDialog(null, "has usado el comodín kraken");
+                    t.uso = 2;
+                    t.hecho = false;
+                    j.Ckraken++;
+                    String t = chat.getText()+ "\n" ;
+                    chat.setText(t + " el jugador " + j.numero + " tiene un kraken" + "\n");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "Este templo está en proceso de generar un comodín");
+
+
+                }
+            }
+
+        });
+
+
+        templo.setVisible(true);
+
+
+    }
     public void generarFrameMina(Mina m, Jugador j){
         JFrame mina = new JFrame("Mina");
         mina.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
