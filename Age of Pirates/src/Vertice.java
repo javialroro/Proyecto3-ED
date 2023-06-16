@@ -62,4 +62,14 @@ public class Vertice {
         }
         return -1;
     }
+
+    public void eliminarArista (Vertice arista)
+    {
+        if (buscarArista(arista) != -1) {
+            System.out.println("Eliminando arista entre "+this.dato+" y "+arista.dato.toString());
+            aristas.remove(buscarArista(arista));
+
+        }
+
+    }
 }

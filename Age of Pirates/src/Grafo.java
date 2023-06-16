@@ -31,8 +31,16 @@ public class Grafo {
     // agrega las aristas
     public void agregarArista(Vertice origen, Vertice destino)
     {
-        if (origen != null && destino != null)
+        if (origen != null && destino != null) {
             origen.agregarArista(destino);
+        }
+    }
+
+    public void eliminarArista(Vertice origen, Vertice destino) {
+        if (origen != null && destino != null) {
+            origen.eliminarArista(destino);
+            //System.out.println("Eliminando arista");
+        }
     }
 
     // agrega las aristas con peso

@@ -458,25 +458,58 @@ public class Main {
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.magenta) {
                                     JOptionPane.showMessageDialog(null, "Fuente de Energia");
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.green) {
-
-                                    generarFrameMina((Mina) matriz[finalR][finalC],jugador);
+                                    if(matriz[finalR][finalC].tieneEnergia){
+                                        generarFrameMina((Mina) matriz[finalR][finalC],jugador);
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(null, "No tiene energia");
+                                    }
 
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.ORANGE) {
-                                    generarFrameTemplo((Templo) matriz[finalR][finalC],jugador);
+                                    if(matriz[finalR][finalC].tieneEnergia){
+                                    generarFrameTemplo((Templo) matriz[finalR][finalC],jugador);}
+                                    else{
+                                        JOptionPane.showMessageDialog(null, "No tiene energia");
+                                    }
 
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.cyan) {
+                                    if(matriz[finalR][finalC].tieneEnergia){
                                     generarFrameMercado(jugador);
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(null, "No tiene energia");
+                                    }
                                 } else if (matrizBotones[finalR][finalC].getBackground() == Color.pink) {
-                                    generarFrameArmeriaCañon(jugador);
+                                    if(matriz[finalR][finalC].tieneEnergia) {
+                                        generarFrameArmeriaCañon(jugador);
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(null, "No tiene energia");
+                                    }
                                 }
                                 else if(matrizBotones[finalR][finalC].getBackground() == Color.red){
-                                    generarFrameArmeriaCañonMultiple(jugador);
+                                    if(matriz[finalR][finalC].tieneEnergia) {
+                                        generarFrameArmeriaCañonMultiple(jugador);
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(null, "No tiene energia");
+                                    }
                                 }
                                 else if(matrizBotones[finalR][finalC].getBackground() == Color.lightGray){
-                                    generarFrameArmeriaCañonBR(jugador);
+                                    if(matriz[finalR][finalC].tieneEnergia) {
+                                        generarFrameArmeriaCañonBR(jugador);
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(null, "No tiene energia");
+                                    }
                                 }
                                 else if(matrizBotones[finalR][finalC].getBackground() == Color.darkGray){
-                                    generarFrameArmeriaBomba(jugador);
+                                    if(matriz[finalR][finalC].tieneEnergia) {
+                                        generarFrameArmeriaBomba(jugador);
+                                    }
+                                    else{
+                                        JOptionPane.showMessageDialog(null, "No tiene energia");
+                                    }
                                 }
                             }
 
@@ -494,7 +527,6 @@ public class Main {
         }
         panelMatriz.repaint();
         panelMatriz.revalidate();
-        //System.out.println("Turno: " + turno);
     }
 
 
@@ -669,6 +701,9 @@ public class Main {
         for(int i = 0; i < 20; i++){
             for(int j = 0; j < 20; j++){
                 if(matriz[i][j].destruido){
+                    if(matriz[i][j] instanceof Conector) {
+                        searchAround(matriz,i,j,jugador,0);
+                    }
                     matriz[i][j] = new EntidadVacia();
                 }
             }
@@ -718,7 +753,7 @@ public class Main {
             }
         }
         return false;
-        //return false; // No hay colisión
+
     }
 
     private void colocarObjetoEnPosicion(Entidad objeto, int x, int y, Entidad[][] matriz, JButton[][] matrizBotones,Jugador jugador) {
@@ -729,13 +764,13 @@ public class Main {
                 jugador.grafo.agregarVertice(objeto);
                 matrizBotones[i][j].setBackground(objeto.color);
                 if(objeto instanceof Conector){
-                    searchAround(matriz,i,j,jugador);
+                    searchAround(matriz,i,j,jugador,1);
                 }
             }
         }
     }
 
-    public static void searchAround(Entidad[][] matrix, int targetRow, int targetCol,Jugador jugador) {
+    public static void searchAround(Entidad[][] matrix, int targetRow, int targetCol,Jugador jugador, int accion) {
         int numRows = matrix.length;
         int numCols = matrix[0].length;
 
@@ -746,12 +781,18 @@ public class Main {
             for (int j = targetCol - radius; j <= targetCol + radius; j++) {
                 if (isValidPosition(i, j, numRows, numCols)) {
                     if (matrix[i][j] instanceof EntidadVacia || matrix[i][j] instanceof Conector) {
-
                     }
                     else{
                         System.out.println("Objeto encontrado en la posición [" + i + ", " + j + "]");
                         Vertice vertice = new Vertice(matrix[i][j]);
                         entidadesCerca.add(vertice);
+                        if (accion == 1) {
+                            matrix[i][j].tieneEnergia = true;
+                        }
+                        else{
+                            matrix[i][j].tieneEnergia = false;
+                        }
+
                     }
 
                 }
@@ -760,7 +801,13 @@ public class Main {
         for (Vertice vertice:entidadesCerca) {
             for(Vertice verticeT:entidadesCerca){
                 if(vertice!=verticeT && vertice.dato.getClass()!=verticeT.dato.getClass()){
+                    if(accion == 1){
                     jugador.grafo.agregarArista(jugador.grafo.buscarVertice(vertice.dato),jugador.grafo.buscarVertice(verticeT.dato));
+                    }
+                    else{
+                        jugador.grafo.eliminarArista(jugador.grafo.buscarVertice(vertice.dato),jugador.grafo.buscarVertice(verticeT.dato));
+                        //System.out.println("Eliminando arista entre "+vertice.dato.getClass()+" y "+verticeT.dato.getClass());
+                    }
                 }
             }
         }
